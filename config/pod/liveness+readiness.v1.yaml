@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liveness-readiness
+  labels:
+    app: liveness-readiness
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 30% # Maximum number of new Pods created, round up desired %
+      maxUnavailable: 30% # Maximum number of old Pods removed, round down desired %,  
+  replicas: 10
+  selector:
+    matchLabels:
+      app: liveness-readiness
+  template:
+    metadata:
+      labels:
+        app: liveness-readiness
+    spec:
+      containers:
+      - name: liveness-readiness
+        image: busybox
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        args:
+          - /bin/sh
+          - -c
+          - sleep 10; touch /tmp/healthy; sleep 20000
+        readinessProbe:
+          exec:
+            command:
+              - cat
+              - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5

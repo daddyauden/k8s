@@ -5,6 +5,10 @@ metadata:
   labels:
     app: nginx
 spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 30% # Maximum number of new Pods created, round up desired %
+      maxUnavailable: 30% # Maximum number of old Pods removed, round down desired %,  
   replicas: 3
   selector:
     matchLabels:

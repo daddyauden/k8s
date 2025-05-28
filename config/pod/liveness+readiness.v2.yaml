@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liveness-readiness
+  labels:
+    app: liveness-readiness
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: liveness-readiness
+  template:
+    metadata:
+      labels:
+        app: liveness-readiness
+    spec:
+      containers:
+      - name: liveness-readiness
+        image: busybox
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        args:
+          - /bin/sh
+          - -c
+          - sleep 20000
+        readinessProbe:
+          exec:
+            command:
+              - cat
+              - /tmp/healthy
+          initialDelaySeconds: 10
+          periodSeconds: 5
