@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pc
+spec:
+  containers:
+  - name: producer
+    image: busybox
+    volumeMounts:
+    - mountPath: /producer
+      name: shared-path
+    args:
+      - /bin/sh
+      - -c
+      - echo "item 1" > /producer/item; sleep 30000
+  - name: customer
+    image: busybox
+    volumeMounts:
+    - mountPath: /customer
+      name: shared-path
+    args:
+      - /bin/sh
+      - -c
+      - cat /customer/item; sleep 30000
+  volumes:
+    - name: shared-path
+      emptyDir: {}
