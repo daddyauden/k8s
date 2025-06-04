@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  nfs-server:
+    image: itsthenetwork/nfs-server-alpine
+    container_name: nfs-server
+    hostname: nfs-server
+    privileged: true
+    environment:
+      - SHARED_DIRECTORY=/exports
+      - SYNC=true
+      - PERMITTED="20.10.0.0/16,30.20.0.0/16"
+      - READ_ONLY=false
+    volumes:
+      - ./data:/exports
+    ports:
+      - "2049:2049"
+    restart: unless-stopped
