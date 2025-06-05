@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-configmap
+  labels:
+    name: myapp-configmap
+spec:
+  containers:
+  - name: myapp-configmap
+    image: nginx
+    ports:
+      - containerPort: 80
+    volumeMounts:
+      - name: v-secret2
+        mountPath: /tmp
+  volumes:
+    - name: v-secret2
+      configMap:
+        name: secret2
+        items:
+          - key: logging.conf
+            path: config/logging.conf
