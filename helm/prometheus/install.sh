@@ -7,7 +7,6 @@ helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --create-namespace \
-  -f values/prometheus.yaml
-
+  -f values.yaml
 
 # helm uninstall prometheus --namespace monitoring

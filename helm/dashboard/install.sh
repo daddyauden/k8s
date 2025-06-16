@@ -7,7 +7,7 @@ helm repo update
 helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard \
   --namespace kubernetes-dashboard \
   --create-namespace \
-  -f values/dashboard.yaml
+  -f values.yaml
 
 kubectl create serviceaccount admin-user -n kubernetes-dashboard
 
