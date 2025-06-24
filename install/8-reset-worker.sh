@@ -3,11 +3,6 @@ set -e
 
 sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F
 
-kubectl delete all --all --all-namespaces
-
-kubectl delete pv --all
-kubectl delete pvc --all
-
 sudo kubeadm reset --force
 
 sudo rm -rf /etc/cni/net.d/*

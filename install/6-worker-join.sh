@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CONTROL_PLANE_HOST=192.168.1.21
+CONTROL_PLANE_HOST=192.168.1.25
 
 TOKEN=""
 HASH=""
