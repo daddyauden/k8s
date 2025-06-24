@@ -1,0 +1,60 @@
+global:
+  defaultStorageClass: rook-ceph-block
+
+auth:
+  username: rabbitmq-admin
+  existingPasswordSecret: rabbitmq-secrets
+  existingSecretPasswordKey: rabbitmq-password
+
+logs: false
+
+clustering:
+  enabled: true
+  forceBoot: true
+  partitionHandling: autoheal
+
+replicaCount: 3
+
+persistence:
+  enabled: true
+  storageClass: rook-ceph-block
+  size: 5Gi
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  path: "/*"
+  pathType: Prefix
+  hostname: rabbitmq.secstep.com
+  ingressClassName: traefik
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  tls: false
+
+volumePermissions:
+  enabled: true
+  resources:
+    requests:
+      cpu: 1
+      memory: 128Mi
+    limits:
+      cpu: 2
+      memory: 256Mi
+
+resources:
+  requests:
+    cpu: 1
+    memory: 256Mi
+  limits:
+    cpu: 2
+    memory: 512Mi
+
+# extraConfiguration: |-
+#   log.default.level = warning
+#   log.file = false
+#   log.console = true
+#   log.console.level = warning
+#   log.console.formatter = json

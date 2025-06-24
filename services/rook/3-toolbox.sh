@@ -1,14 +1,16 @@
 #!/usr/bin/env sh
 set -e
 
-cd /tmp/rook/deploy/examples
+cd /gluster/app/github/rook/deploy/examples
+
+NS=rook-ceph
 
 # Interactive Toolbox
-kubectl apply -f toolbox.yaml
+kubectl apply -f toolbox.yaml -n $NS
 
-kubectl -n rook-ceph rollout status deploy/rook-ceph-tools
+kubectl -n $NS rollout status deploy/rook-ceph-tools
 
-kubectl -n rook-ceph exec -it deploy/rook-ceph-tools -- bash
+kubectl -n $NS exec -it deploy/rook-ceph-tools -- bash
 
 # ceph status
 # ceph osd status

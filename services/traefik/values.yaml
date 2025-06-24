@@ -1,0 +1,83 @@
+ports:
+  traefik:
+    port: 8080
+    exposedPort: 8080
+    nodePort: 32088
+    expose:
+      default: false
+  web:
+    port: 8000
+    exposedPort: 80
+    nodePort: 32080
+    expose:
+      default: true
+    forwardedHeaders:
+      trustedIPs:
+        - 10.20.0.0/16
+        - 192.168.1.0/24
+        - 20.0.0.0/16
+        - 30.0.0.0/16
+    proxyProtocol:
+      trustedIPs:
+        - 10.20.0.0/16
+        - 192.168.1.0/24
+        - 20.0.0.0/16
+        - 30.0.0.0/16
+  websecure:
+    port: 8443
+    exposedPort: 443
+    nodePort: 32443
+    expose:
+      default: false
+
+deployment:
+  enabled: true
+  kind: DaemonSet
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
+  kubernetesGateway:
+    enabled: false
+
+logs:
+  general:
+    level: DEBUG
+
+service:
+  enabled: true
+  type: NodePort
+  # externalIPs:
+  #   - 10.20.1.1
+  # ipFamilies:
+  #   - IPv4
+
+hostNetwork: false
+
+resources:
+  requests:
+    cpu: 1
+    memory: 256Mi
+  limits:
+    cpu: 1
+    memory: 512Mi
+
+gateway:
+  enabled: false
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+persistence:
+  enabled: false
+
+certificatesResolvers:
+  letsencrypt: null

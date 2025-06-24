@@ -1,17 +1,22 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
-
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo update
 
-kubectl create namespace $NS
+NS=prod-mock
+
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: $NS
+EOF
 
 kubectl create secret generic redis-secrets --from-literal=redis-password=redis-admin -n $NS
 
-helm install redis-sentinel bitnami/redis --namespace $NS --create-namespace -f values.yaml
+helm install redis bitnami/redis --version 21.2.5 --namespace $NS --create-namespace -f values.yaml
 
 # after update values.yaml, run it
-# helm upgrade redis-sentinel bitnami/redis --namespace $NS -f values.yaml --set global.redis.password=$REDIS_PASSWORD
+# helm upgrade redis bitnami/redis --namespace $NS -f values.yaml --set global.redis.password=$REDIS_PASSWORD

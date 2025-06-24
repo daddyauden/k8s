@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-cd /tmp/rook/deploy/examples
+cd /gluster/app/github/rook/deploy/examples
 
 kubectl apply -f filesystem.yaml
 
