@@ -21,6 +21,8 @@ sudo apt-get -y autoremove
 
 sudo rm -rf /var/lib/etcd
 sudo rm -rf /var/lib/kubelet
+sudo rm -rf /etc/default/kubelet
+sudo rm -rf /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 sudo rm -rf /var/lib/containerd
 
 sudo ip route flush proto bird

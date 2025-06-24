@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-CONTROL_PLANE_HOST=192.168.1.22
+CONTROL_PLANE_HOST=192.168.1.21
 
 POD_NETWORK_CIDR=20.20.0.0/16
 
@@ -26,6 +26,7 @@ sudo kubeadm init --v=10 --pod-network-cidr=$POD_NETWORK_CIDR --service-cidr=$SE
 # kubectl describe node c2 | grep Taints
 # kubectl describe node c5 | grep Taints
 
-# kubectl label node c1 node-role.kubernetes.io/worker=worker
+###### after add worker node, update label
 # kubectl label node c2 node-role.kubernetes.io/worker=worker
 # kubectl label node c4 node-role.kubernetes.io/worker=worker
+# kubectl label node c5 node-role.kubernetes.io/worker=worker
