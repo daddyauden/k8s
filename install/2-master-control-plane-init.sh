@@ -14,19 +14,7 @@ sudo kubeadm init --v=10 --pod-network-cidr=$POD_NETWORK_CIDR --service-cidr=$SE
 # get tokens for worker node join
 # kubeadm token create --print-join-command
 
-# kubectl taint nodes c1 node-role.kubernetes.io/control-plane:NoSchedule
-# kubectl taint nodes c2 node-role.kubernetes.io/control-plane:NoSchedule
-# kubectl taint nodes c5 node-role.kubernetes.io/control-plane:NoSchedule
-
-# kubectl taint nodes c1 node-role.kubernetes.io/control-plane:NoSchedule-
-# kubectl taint nodes c2 node-role.kubernetes.io/control-plane:NoSchedule-
-# kubectl taint nodes c5 node-role.kubernetes.io/control-plane:NoSchedule-
-
-# kubectl describe node c1 | grep Taints
-# kubectl describe node c2 | grep Taints
-# kubectl describe node c5 | grep Taints
-
 ###### after add worker node, update label
+# kubectl label node c1 node-role.kubernetes.io/worker=worker
 # kubectl label node c2 node-role.kubernetes.io/worker=worker
 # kubectl label node c4 node-role.kubernetes.io/worker=worker
-# kubectl label node c5 node-role.kubernetes.io/worker=worker

@@ -1,7 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
-cd ./github
+if [ ! -d "github" ]; then
+    mkdir ./github
+fi
+
+cd github
 
 if [ ! -d "rook/deploy/examples" ]; then
     git clone https://github.com/rook/rook.git
@@ -16,16 +20,6 @@ kubectl apply -f common.yaml
 kubectl apply -f operator.yaml
 
 ##### update placement and storage base on your requirements
-# placement:
-#   osd:
-#     nodeAffinity:
-#       requiredDuringSchedulingIgnoredDuringExecution:
-#         nodeSelectorTerms:
-#         - matchExpressions:
-#           - key: rook-ceph-osd
-#             operator: In
-#             values:
-#             - "true"
 # storage:
 #   useAllNodes: false
 #   useAllDevices: false
@@ -39,10 +33,6 @@ kubectl apply -f operator.yaml
 #     - name: c4
 #       devices:
 #         - name: "sdc"
-
-kubectl label node c1 rook-ceph-osd=true
-kubectl label node c2 rook-ceph-osd=true
-kubectl label node c4 rook-ceph-osd=true
 
 kubectl apply -f cluster.yaml
 
