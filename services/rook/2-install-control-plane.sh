@@ -30,6 +30,9 @@ kubectl apply -f operator.yaml
 #   useAllNodes: false
 #   useAllDevices: false
 #   nodes:
+#     - name: c1
+#       devices:
+#         - name: "sdc"
 #     - name: c2
 #       devices:
 #         - name: "sdc"
@@ -37,6 +40,7 @@ kubectl apply -f operator.yaml
 #       devices:
 #         - name: "sdc"
 
+kubectl label node c1 rook-ceph-osd=true
 kubectl label node c2 rook-ceph-osd=true
 kubectl label node c4 rook-ceph-osd=true
 
