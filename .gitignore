@@ -1,2 +1,3 @@
 /tf/**/*
 !/tf/**/*.tf
+/services/rook/github/*

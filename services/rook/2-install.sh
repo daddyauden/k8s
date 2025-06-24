@@ -1,31 +1,46 @@
 #!/usr/bin/env sh
 set -e
 
-cd /gluster/app/github/
-
-NS=rook-ceph
-
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: $NS
-EOF
+cd ./github
 
 if [ ! -d "rook/deploy/examples" ]; then
-    git clone --single-branch --branch v1.17.4 https://github.com/rook/rook.git
+    git clone https://github.com/rook/rook.git
 fi
 
 cd rook/deploy/examples
 
-kubectl apply -f crds.yaml -f common.yaml -f operator.yaml -n $NS
-kubectl apply -f cluster.yaml -n $NS
+NS=rook-ceph
 
-for device in sda sdc; do
-  sudo sgdisk --zap-all /dev/$device
-  sudo dd if=/dev/zero of=/dev/$device bs=1M count=1000 oflag=direct,dsync
-  sudo wipefs -a /dev/$device
-done
+kubectl apply -f crds.yaml
+kubectl apply -f common.yaml
+kubectl apply -f operator.yaml
 
-sudo pvremove --force --force /dev/sda
-sudo pvremove --force --force /dev/sdc
+##### update placement and storage base on your requirements
+# placement:
+#   osd:
+#     nodeAffinity:
+#       requiredDuringSchedulingIgnoredDuringExecution:
+#         nodeSelectorTerms:
+#         - matchExpressions:
+#           - key: rook-ceph-osd
+#             operator: In
+#             values:
+#             - "true"
+# storage:
+#   useAllNodes: false
+#   useAllDevices: false
+#   nodes:
+#     - name: c2
+#       devices:
+#         - name: "sda"
+#     - name: c4
+#       devices:
+#         - name: "sda"
+
+kubectl label node c2 rook-ceph-osd=true
+kubectl label node c4 rook-ceph-osd=true
+
+kubectl apply -f cluster.yaml
+
+kubectl -n $NS get pods
+kubectl -n $NS get cephcluster

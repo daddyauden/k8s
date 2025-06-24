@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-cd /gluster/app/github/rook/deploy/examples
+cd ./github/rook/deploy/examples
 
 kubectl apply -f csi/rbd/storageclass.yaml
