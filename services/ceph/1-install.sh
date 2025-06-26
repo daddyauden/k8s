@@ -115,8 +115,11 @@ function deploy_mons() {
     local ssh_port="${SSH_PORTS[$bootstrap_node]}"
 
     echo "=== deploy mons ==="
-    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch apply mon ${MON_NODES[*]}"
-    
+    for node in "${MON_NODES[@]}"; do
+        echo "adding $node..."
+        ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch daemon add mon $node:${NODE_IPS[$node]}"
+    done
+
     # sleep 10
     echo "=== OSD Status ==="
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph mon stat"
@@ -138,26 +141,26 @@ function deploy_osds() {
 }
 
 function main() {
-    # if [ $# -ne 1 ]; then
-    #     echo "usage: $0 [bootstrap-node-name] (options: c1/c2/c4)"
-    #     exit 1
-    # fi
+    if [ $# -ne 1 ]; then
+        echo "usage: $0 [bootstrap-node-name] (options: c1/c2/c4)"
+        exit 1
+    fi
 
     local bootstrap_node=$1
 
-    # check_prerequisites
+    check_prerequisites
     
-    # for node in "${!NODE_IPS[@]}"; do
-    #     check_sudo "$node"
-    # done
+    for node in "${!NODE_IPS[@]}"; do
+        check_sudo "$node"
+    done
 
-    # install_package
+    install_package
 
-    # check_disks
-    # bootstrap_cluster "$bootstrap_node"
-    # add_cluster_nodes "$bootstrap_node"
+    check_disks
+    bootstrap_cluster "$bootstrap_node"
+    add_cluster_nodes "$bootstrap_node"
     deploy_mons "$bootstrap_node"
-    # deploy_osds "$bootstrap_node"
+    deploy_osds "$bootstrap_node"
 
     echo "=== finished ==="
     echo "Cluster status: ssh -p ${SSH_PORTS[$bootstrap_node]} ${CEPH_USER}@${NODE_IPS[$bootstrap_node]} 'sudo ceph -s'"
