@@ -4,6 +4,7 @@
 
 set -euo pipefail
 
+
 CEPH_USER="auden"
 declare -A NODE_IPS=(
     ["c1"]="192.168.1.21"
@@ -18,18 +19,20 @@ declare -A SSH_PORTS=(
 OSD_DEVICE="/dev/sdc"
 
 function cleanup_ceph_services() {
-    local node=$1
-    local ip=${NODE_IPS[$node]}
-    local port=${SSH_PORTS[$node]}
+    local bootstrap_node=$1
+    local ssh_port="${SSH_PORTS[$bootstrap_node]}"
 
     echo "=== purge node $node ceph service ==="
-    
-    ssh -p "$port" "${CEPH_USER}@${ip}" "
-        sudo systemctl stop 'ceph-*' || true
-        sudo systemctl disable 'ceph-*' || true
-        sudo systemctl reset-failed 'ceph-*' || true
-        sudo pkill -f ceph || true
-    "
+
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" \
+    "services=\$(systemctl list-units --type=service --no-legend --plain | grep -E 'ceph(-[a-z]+@?)?\.service' | awk '{print \$1}'); \
+    if [ -n \"\$services\" ]; then \
+        sudo systemctl stop \$services && \
+        sudo systemctl disable \$services && \
+        sudo systemctl reset-failed \$services; \
+    else \
+        echo 'No Ceph services found to remove'; \
+    fi"
 }
 
 function remove_ceph_data() {
@@ -58,7 +61,7 @@ function cleanup_osd_device() {
     
     ssh -p "$port" "${CEPH_USER}@${ip}" "
         sudo sgdisk --zap-all $OSD_DEVICE
-        sudo dd if=/dev/zero of=$OSD_DEVICE bs=1M count=100
+        sudo dd if=/dev/zero of=$OSD_DEVICE bs=1M count=1000 oflag=direct,dsync
         sudo blkdiscard $OSD_DEVICE || true
         sudo partprobe $OSD_DEVICE
     "
@@ -75,7 +78,6 @@ function uninstall_packages() {
         sudo apt-get purge -y cephadm
         sudo apt-get autoremove -y
         sudo rm -rf /etc/apt/sources.list.d/ceph.list
-        sudo apt-key del \"\$(sudo apt-key list | grep -B1 'Ceph' | head -n1 | awk '{print \$2}' | cut -d'/' -f2)\" || true
         sudo apt-get update
     "
 }
