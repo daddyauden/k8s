@@ -9,11 +9,6 @@ kubectl -n $NS patch cephcluster rook-ceph --type merge -p '{"spec":{"cleanupPol
 
 kubectl -n $NS delete cephcluster rook-ceph
 
-### waiting 2-5 mins check pods, there is cluster-cleanup-job-* Job，and status should be Completed
-echo "waiting 3 minutes for pod cleanup completed"
-sleep 3m
-kubectl -n rook-ceph get pods
-
 # kubectl delete -f csi/rbd/storageclass.yaml
 
 # kubectl delete -f csi/cephfs/storageclass.yaml
