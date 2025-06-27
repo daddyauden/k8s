@@ -142,6 +142,36 @@ function deploy_osds() {
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph osd tree"
 }
 
+function create_pools() {
+    local bootstrap_node=$1
+    local ssh_port="${SSH_PORTS[$bootstrap_node]}"
+
+    echo "=== create pool ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph osd pool create replicapool"
+
+    sleep 10
+    echo "=== pool Status ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph osd pool ls"
+}
+
+function create_filesystem() {
+    local bootstrap_node=$1
+    local ssh_port="${SSH_PORTS[$bootstrap_node]}"
+
+    echo "=== create pool for filesystem meta data ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph osd pool create myfs_metadata"
+
+    echo "=== create pool for filesystem data ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph osd pool create myfs_data"
+
+    echo "=== create filesystem ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph fs new myfs myfs_metadata myfs_data"
+
+    sleep 10
+    echo "=== pool Status ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph fs ls"
+}
+
 function main() {
     if [ $# -ne 1 ]; then
         echo "usage: $0 [bootstrap-node-name] (options: c1/c2/c4)"
@@ -163,6 +193,9 @@ function main() {
     add_cluster_nodes "$bootstrap_node"
     deploy_mons "$bootstrap_node"
     deploy_osds "$bootstrap_node"
+
+    create_pools "$bootstrap_node"
+    create_filesystem "$bootstrap_node"
 
     echo "=== finished ==="
     echo "Cluster status: ssh -p ${SSH_PORTS[$bootstrap_node]} ${CEPH_USER}@${NODE_IPS[$bootstrap_node]} 'sudo ceph -s'"
