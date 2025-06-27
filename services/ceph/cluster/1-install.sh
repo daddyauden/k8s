@@ -167,6 +167,9 @@ function create_filesystem() {
     echo "=== create filesystem ==="
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph fs new myfs myfs_metadata myfs_data"
 
+    echo "=== enable mds for filesystem ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch apply mds myfs 1"
+
     sleep 10
     echo "=== pool Status ==="
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph fs ls"

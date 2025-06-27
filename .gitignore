@@ -1,4 +1,4 @@
 /tf/**/*
 !/tf/**/*.tf
-/services/ceph/github/*
+/services/ceph/rook/github/*
 /services/rook/github/*

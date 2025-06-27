@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+set -e
+
+######### run the commands in k8s control plane #########
+
+cd github/rook/deploy/examples
+
+kubectl apply -f crds.yaml
+kubectl apply -f common.yaml
+kubectl apply -f operator.yaml
+
+# sleep 1m
+
+cd external
+kubectl apply -f common-external.yaml
+kubectl apply -f cluster-external.yaml
+
+# wait 3 mins
+# sleep 3m
+
+# paste output from 1-export-config-from-ceph-admin-node.sh, the next step depends on it
+export ARGS="[Configurations]
+namespace = rook-ceph
+rgw-pool-prefix = default
+format = bash
+cephfs-filesystem-name = myfs
+cephfs-metadata-pool-name = myfs_metadata
+cephfs-data-pool-name = myfs_data
+rbd-data-pool-name = replicapool
+skip-monitoring-endpoint = True
+"
+export NAMESPACE=rook-ceph
+export ROOK_EXTERNAL_FSID=68945eb2-536b-11f0-8b39-b578895a0c19
+export ROOK_EXTERNAL_USERNAME=client.healthchecker
+export ROOK_EXTERNAL_CEPH_MON_DATA=c1=192.168.1.21:6789
+export ROOK_EXTERNAL_USER_SECRET=AQDm5F5oxUaDAxAA2Hu3jWzG+zd9NJyd/WAhtg==
+export CSI_RBD_NODE_SECRET=AQDm5F5oA0E0BBAAxX9/pQMJQ7sf468YZlDIlQ==
+export CSI_RBD_NODE_SECRET_NAME=csi-rbd-node
+export CSI_RBD_PROVISIONER_SECRET=AQDm5F5oqUrfBBAAIf1cAZkGju5mQWZZ1QPKbg==
+export CSI_RBD_PROVISIONER_SECRET_NAME=csi-rbd-provisioner
+export CEPHFS_POOL_NAME=myfs_data
+export CEPHFS_METADATA_POOL_NAME=myfs_metadata
+export CEPHFS_FS_NAME=myfs
+export CSI_CEPHFS_NODE_SECRET=AQDm5F5oPq6OBRAALbvrkbJlwRq+6LMgFmcLPg==
+export CSI_CEPHFS_PROVISIONER_SECRET=AQDm5F5oD/YZBhAAVV9Ftp0xbBtlg6CDEoVaqg==
+export CSI_CEPHFS_NODE_SECRET_NAME=csi-cephfs-node
+export CSI_CEPHFS_PROVISIONER_SECRET_NAME=csi-cephfs-provisioner
+export RBD_POOL_NAME=replicapool
+export RGW_POOL_PREFIX=default
+
+chmod +x import-external-cluster.sh
+
+./import-external-cluster.sh
