@@ -70,8 +70,8 @@ function bootstrap_cluster() {
     ssh -p "$ssh_port" "${CEPH_USER}@${mon_ip}" "sudo rm -rf /etc/ceph/* /var/lib/ceph/*"
 
     ssh -p "$ssh_port" "${CEPH_USER}@${mon_ip}" \
-        "wget -q -O- https://download.ceph.com/keys/release.asc | sudo tee /etc/apt/keyrings/ceph.gpg >/dev/null && \
-        echo \"deb [signed-by=/etc/apt/keyrings/ceph.gpg] https://download.ceph.com/debian-${CEPH_VERSION}/ jammy main\" | sudo tee /etc/apt/sources.list.d/ceph.list && \
+        "sudo rm /etc/apt/sources.list.d/ceph.list \
+        sudo apt-add-repository -y "deb https://download.ceph.com/debian-${CEPH_VERSION}/ $(lsb_release -sc) main"
         sudo apt update && sudo apt install -y cephadm"
 
     if [ ! -f "$HOME/.ssh/ceph-deploy" ]; then
@@ -116,8 +116,10 @@ function deploy_mons() {
 
     echo "=== deploy mons ==="
     for node in "${MON_NODES[@]}"; do
-        echo "adding $node..."
-        ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch daemon add mon $node:${NODE_IPS[$node]}"
+        if [ "$node" != "$bootstrap_node" ]; then
+            echo "adding $node..."
+            ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch daemon add mon $node:${NODE_IPS[$node]}"
+        fi
     done
 
     # sleep 10
