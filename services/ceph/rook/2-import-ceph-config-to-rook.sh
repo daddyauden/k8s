@@ -9,14 +9,24 @@ kubectl apply -f crds.yaml
 kubectl apply -f common.yaml
 kubectl apply -f operator.yaml
 
-# sleep 1m
+sleep 1m
 
 cd external
-kubectl apply -f common-external.yaml
-kubectl apply -f cluster-external.yaml
+kubectl apply -f external/common-external.yaml
+
+# add some spec
+#   cephVersion:
+#     image: quay.io/ceph/ceph:v17.2.8
+#   dataDirHostPath: /var/lib/rook
+#   dashboard:
+#     enabled: false
+#   storage:
+#     useAllNodes: false
+#     useAllDevices: false
+kubectl apply -f external/cluster-external.yaml
 
 # wait 3 mins
-# sleep 3m
+sleep 3m
 
 # paste output from 1-export-config-from-ceph-admin-node.sh, the next step depends on it
 export ARGS="[Configurations]
@@ -27,7 +37,11 @@ cephfs-filesystem-name = myfs
 cephfs-metadata-pool-name = myfs_metadata
 cephfs-data-pool-name = myfs_data
 rbd-data-pool-name = replicapool
+rgw-endpoint = https://us-east-s3.test.com:443
 skip-monitoring-endpoint = True
+rgw-realm-name = america
+rgw-zone-name = us-east-a
+rgw-zonegroup-name = us-east
 "
 export NAMESPACE=rook-ceph
 export ROOK_EXTERNAL_FSID=68945eb2-536b-11f0-8b39-b578895a0c19
@@ -47,7 +61,14 @@ export CSI_CEPHFS_NODE_SECRET_NAME=csi-cephfs-node
 export CSI_CEPHFS_PROVISIONER_SECRET_NAME=csi-cephfs-provisioner
 export RBD_POOL_NAME=replicapool
 export RGW_POOL_PREFIX=default
+export RGW_ADMIN_OPS_USER_ACCESS_KEY=5WD2NS8IH4ZFVPT9IABZ
+export RGW_ADMIN_OPS_USER_SECRET_KEY=gRhXOpzSrMFksjNMpUv7eESxuFA7iPMd3HYuKC0T
 
+# change default rbd storage class name
+export RBD_STORAGE_CLASS_NAME=rook-ceph-block
+export CEPHFS_STORAGE_CLASS_NAME=rook-cephfs
+
+# comment RBD_STORAGE_CLASS_NAME and CEPHFS_STORAGE_CLASS_NAME with up new values
 chmod +x import-external-cluster.sh
 
 ./import-external-cluster.sh

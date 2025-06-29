@@ -175,6 +175,56 @@ function create_filesystem() {
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph fs ls"
 }
 
+function create_rgw() {
+    local bootstrap_node=$1
+    local ssh_port="${SSH_PORTS[$bootstrap_node]}"
+
+    echo "=== create realm ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin realm create --rgw-realm=america"
+
+    echo "=== create zone group ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zonegroup create --rgw-realm=america --rgw-zonegroup=us-east --endpoints=https://us-east-s3.test.com:443 --master --default"
+
+    echo "=== create zone ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zone create --rgw-zonegroup=us-east --rgw-zone=us-east-a --master --default"
+
+    echo "=== create system user ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin user create --uid="admin" --display-name="Administrator User" --system"
+
+    echo "=== add user to master zone and commit period, access-key and secret from the output after create user command ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zone modify --rgw-zone=us-east-a --access-key=EHYDO0ZAKA71YRRU8D29 --secret=PztTjcbAPiGskL3KFqDiRZ3A1G7vc9sMPggivrxw"
+
+    echo "=== update period ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin period update --commit"
+
+    echo "=== update zone group config ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zonegroup get --rgw-zonegroup=us-east > zonegroup.json"
+    ### update zonegroup.json file with your needs
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zonegroup set --rgw-zonegroup=us-east --infile=zonegroup.json"
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin period update --commit"
+
+    echo "=== update zone config ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zone get --rgw-zone=us-east-a > zone.json"
+    ### update zone.json file with your needs
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zone set --rgw-zone=us-east-a --infile=zone.json"
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin period update --commit"
+
+    echo "=== enable rgw service ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch apply rgw america --placement="c1,c2,c4" --port=7480"
+
+    echo "=== check rgw service ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch ps | grep rgw"
+
+    echo "=== restart rgw service if need ==="
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch restart rgw.america"
+
+    # echo "=== add rgw instance if need ==="
+    # ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch apply rgw america --placement="c1,c2,c4,c5,c6""
+
+    # echo "=== remove rgw service if need ==="
+    # ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo ceph orch rm rgw.america"
+}
+
 function main() {
     if [ $# -ne 1 ]; then
         echo "usage: $0 [bootstrap-node-name] (options: c1/c2/c4)"
@@ -199,6 +249,8 @@ function main() {
 
     create_pools "$bootstrap_node"
     create_filesystem "$bootstrap_node"
+
+
 
     echo "=== finished ==="
     echo "Cluster status: ssh -p ${SSH_PORTS[$bootstrap_node]} ${CEPH_USER}@${NODE_IPS[$bootstrap_node]} 'sudo ceph -s'"
