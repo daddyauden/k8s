@@ -1,0 +1,23 @@
+controller:
+  replicaCount: 3
+  progressDeadlineSeconds: 300
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+  admissionWebhooks:
+    enabled: false
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+  resources:
+    requests:
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 256Mi

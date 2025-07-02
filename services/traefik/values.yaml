@@ -54,10 +54,6 @@ logs:
 service:
   enabled: true
   type: NodePort
-  # externalIPs:
-  #   - 10.20.1.1
-  # ipFamilies:
-  #   - IPv4
 
 hostNetwork: false
 
@@ -66,8 +62,8 @@ resources:
     cpu: 1
     memory: 256Mi
   limits:
-    cpu: 1
-    memory: 512Mi
+    cpu: 2
+    memory: 256Mi
 
 gateway:
   enabled: false

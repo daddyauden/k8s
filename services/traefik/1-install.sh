@@ -14,16 +14,7 @@ metadata:
   name: $NS
 EOF
 
-# helm install traefik-crds traefik/traefik-crds --namespace $NS --create-namespace
-
-helm install traefik traefik/traefik --version 36.1.0 --namespace $NS --create-namespace -f ./values.yaml
-
-# helm install traefik traefik/traefik --version 36.1.0 \
-#   --namespace $NS \
-#   --create-namespace \
-#   --set logs.general.level=INFO \
-#   --set providers.kubernetesIngress.enabled=true
-
+helm install traefik traefik/traefik --version 36.3.0 --namespace $NS --create-namespace -f ./values.yaml
 
 # update service type, as service type in values file do not work, must update
 # helm upgrade traefik traefik/traefik --namespace $NS -f values.yaml --set service.type=NodePort

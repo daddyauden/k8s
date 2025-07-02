@@ -1,0 +1,112 @@
+controller:
+  jenkinsUrl: https://jenkins.test.com
+  jenkinsUriPrefix: /
+  probes:
+    startupProbe:
+      httpGet:
+          path: /login
+          port: http
+      initialDelaySeconds: 60
+      periodSeconds: 20
+      timeoutSeconds: 20
+      successThreshold: 1
+      failureThreshold: 30
+    livenessProbe:
+      httpGet:
+          path: /login
+          port: http
+      initialDelaySeconds: 90
+      periodSeconds: 15
+      timeoutSeconds: 15
+      successThreshold: 1
+      failureThreshold: 10
+    readinessProbe:
+      httpGet:
+          path: /login
+          port: http
+      initialDelaySeconds: 60
+      periodSeconds: 20
+      timeoutSeconds: 20
+      successThreshold: 1
+      failureThreshold: 10
+  JCasC:
+    configScripts:
+      welcome-message: |
+        jenkins:
+          systemMessage: Welcome to our CI\CD server. This Jenkins is configured and managed 'as code'.
+    securityRealm: |-
+      local:
+        allowsSignup: false
+        enableCaptcha: false
+        users:
+        - id: "${JENKINS_USER}"
+          name: "Jenkins Admin"
+          password: "${JENKINS_PASS}"
+    authorizationStrategy: |-
+      loggedInUsersCanDoAnything:
+        allowAnonymousRead: false
+  initContainerResources:
+    requests:
+      cpu: 2
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 1024Mi
+  initContainerEnv:
+    - name: JENKINS_USER
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: jenkins-username
+    - name: JENKINS_PASS
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: jenkins-password
+  containerEnv:
+    - name: JENKINS_USER
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: jenkins-username
+    - name: JENKINS_PASS
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: jenkins-password
+  admin:
+    createSecret: false
+    existingSecret: jenkins-secrets
+    userKey: jenkins-username
+    passwordKey: jenkins-password
+  jenkinsAdminEmail: test@test.com
+  resources:
+    requests:
+      cpu: 2
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 1024Mi
+  serviceEnabled: true
+  serviceType: ClusterIP
+
+agent:
+  podName: default
+  customJenkinsLabels: default
+  resources:
+    requests:
+      cpu: 2
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 1024Mi
+  livenessProbe:
+    initialDelaySeconds: 90
+    periodSeconds: 15
+    timeoutSeconds: 15
+    successThreshold: 1
+    failureThreshold: 10
+
+persistence:
+  enabled: true
+  storageClass: rook-ceph-block

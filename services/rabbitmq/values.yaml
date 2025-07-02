@@ -23,17 +23,6 @@ persistence:
 service:
   type: ClusterIP
 
-ingress:
-  enabled: true
-  path: "/*"
-  pathType: Prefix
-  hostname: rabbitmq.test.com
-  ingressClassName: traefik
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: web
-  tls: false
-
 volumePermissions:
   enabled: true
   resources:
@@ -51,10 +40,3 @@ resources:
   limits:
     cpu: 2
     memory: 512Mi
-
-# extraConfiguration: |-
-#   log.default.level = warning
-#   log.file = false
-#   log.console = true
-#   log.console.level = warning
-#   log.console.formatter = json
