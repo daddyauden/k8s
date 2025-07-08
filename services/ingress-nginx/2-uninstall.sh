@@ -3,6 +3,6 @@ set -e
 
 NS=ingress-nginx
 
-kubectl delete secret tls-test-com -n prod-mock
+kubectl delete secret tls-domain -n prod-mock
 
 helm uninstall ingress-nginx -n $NS

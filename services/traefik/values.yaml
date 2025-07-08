@@ -13,14 +13,12 @@ ports:
       default: true
     forwardedHeaders:
       trustedIPs:
-        - 10.20.0.0/16
-        - 192.168.1.0/24
+        - 10.0.0.0/16
         - 20.0.0.0/16
         - 30.0.0.0/16
     proxyProtocol:
       trustedIPs:
-        - 10.20.0.0/16
-        - 192.168.1.0/24
+        - 10.0.0.0/16
         - 20.0.0.0/16
         - 30.0.0.0/16
   websecure:

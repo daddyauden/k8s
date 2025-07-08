@@ -1,5 +1,5 @@
 controller:
-  jenkinsUrl: https://jenkins.test.com
+  jenkinsUrl: https://jenkins."{{ .Values.domain | default "test.com" }}"
   jenkinsUriPrefix: /
   probes:
     startupProbe:
@@ -47,7 +47,7 @@ controller:
         allowAnonymousRead: false
   initContainerResources:
     requests:
-      cpu: 2
+      cpu: 1
       memory: 512Mi
     limits:
       cpu: 2
@@ -79,10 +79,9 @@ controller:
     existingSecret: jenkins-secrets
     userKey: jenkins-username
     passwordKey: jenkins-password
-  jenkinsAdminEmail: test@test.com
   resources:
     requests:
-      cpu: 2
+      cpu: 1
       memory: 512Mi
     limits:
       cpu: 2
@@ -95,7 +94,7 @@ agent:
   customJenkinsLabels: default
   resources:
     requests:
-      cpu: 2
+      cpu: 1
       memory: 512Mi
     limits:
       cpu: 2
@@ -110,3 +109,4 @@ agent:
 persistence:
   enabled: true
   storageClass: rook-ceph-block
+  size: 20Gi

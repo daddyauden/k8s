@@ -570,7 +570,7 @@ controller:
         # -- Repository of the image that triggers the reload
         repository: kiwigrid/k8s-sidecar
         # -- Tag for the image that triggers the reload
-        tag: 1.30.5
+        tag: 1.30.3
       imagePullPolicy: IfNotPresent
       resources:
         {}
@@ -962,7 +962,7 @@ agent:
     # -- Repository to pull the agent jnlp image from
     repository: "jenkins/inbound-agent"
     # -- Tag of the image to pull
-    tag: "3309.v27b_9314fd1a_4-6"
+    tag: "3309.v27b_9314fd1a_4-7"
   # -- Configure working directory for default agent
   workingDir: "/home/jenkins/agent"
   nodeUsageMode: "NORMAL"

@@ -183,7 +183,7 @@ function create_rgw() {
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin realm create --rgw-realm=america"
 
     echo "=== create zone group ==="
-    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zonegroup create --rgw-realm=america --rgw-zonegroup=us-east --endpoints=https://us-east-s3.test.com:443 --master --default"
+    ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zonegroup create --rgw-realm=america --rgw-zonegroup=us-east --endpoints=https://us-east-s3.$DOMAIN:443 --master --default"
 
     echo "=== create zone ==="
     ssh -p "$ssh_port" "${CEPH_USER}@${NODE_IPS[$bootstrap_node]}" "sudo radosgw-admin zone create --rgw-zonegroup=us-east --rgw-zone=us-east-a --master --default"

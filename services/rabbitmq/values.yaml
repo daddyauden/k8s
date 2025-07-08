@@ -13,25 +13,7 @@ clustering:
   forceBoot: true
   partitionHandling: autoheal
 
-replicaCount: 3
-
-persistence:
-  enabled: true
-  storageClass: rook-ceph-block
-  size: 5Gi
-
-service:
-  type: ClusterIP
-
-volumePermissions:
-  enabled: true
-  resources:
-    requests:
-      cpu: 1
-      memory: 128Mi
-    limits:
-      cpu: 2
-      memory: 256Mi
+replicaCount: 1
 
 resources:
   requests:
@@ -40,3 +22,18 @@ resources:
   limits:
     cpu: 2
     memory: 512Mi
+
+persistence:
+  enabled: true
+  storageClass: rook-ceph-block
+  size: 5Gi
+
+volumePermissions:
+  enabled: true
+  resources:
+    requests:
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 512Mi

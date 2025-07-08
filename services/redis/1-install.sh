@@ -14,7 +14,7 @@ metadata:
   name: $NS
 EOF
 
-kubectl create secret generic redis-secrets --from-literal=redis-password=redis-admin -n $NS
+kubectl create secret generic redis-secrets --from-literal=redis-password=redis-admin --from-literal=REDIS_PASSWORD=redis-admin -n $NS
 
 helm install redis bitnami/redis --version 21.2.6 --namespace $NS --create-namespace -f values.yaml
 

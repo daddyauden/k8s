@@ -1,0 +1,102 @@
+global:
+  postgresql:
+    auth:
+      username: gitlab
+      database: gitlabhq_production
+      existingSecret: postgres-secrets
+      secretKeys:
+        adminPasswordKey: postgres-password
+        userPasswordKey: gitlab-password
+        replicationPasswordKey: replication-password
+
+architecture: standalone
+
+shmVolume:
+  enabled: true
+  sizeLimit: 1Gi
+
+primary:
+  name: primary
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 30
+    successThreshold: 1
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  resources:
+    requests:
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 512Mi
+  persistence:
+    enabled: true
+    storageClass: rook-ceph-block
+    size: 20Gi
+
+# architecture: replication
+
+# replication:
+#   synchronousCommit: "remote_apply"
+
+# readReplicas:
+#   name: secondary
+#   replicaCount: 2
+#   startupProbe:
+#     enabled: true
+#     initialDelaySeconds: 120
+#     periodSeconds: 30
+#     timeoutSeconds: 10
+#     failureThreshold: 30
+#     successThreshold: 1
+#   livenessProbe:
+#     enabled: true
+#     initialDelaySeconds: 160
+#     periodSeconds: 15
+#     timeoutSeconds: 10
+#     failureThreshold: 3
+#     successThreshold: 1
+#   readinessProbe:
+#     enabled: true
+#     initialDelaySeconds: 40
+#     periodSeconds: 10
+#     timeoutSeconds: 10
+#     failureThreshold: 3
+#     successThreshold: 1
+#   resources:
+#     requests:
+#       cpu: 1
+#       memory: 256Mi
+#     limits:
+#       cpu: 1
+#       memory: 512Mi
+#   persistence:
+#     enabled: true
+#     storageClass: rook-ceph-block
+#     size: 20Gi
+
+volumePermissions:
+  enabled: true
+  resources:
+    requests:
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 512Mi

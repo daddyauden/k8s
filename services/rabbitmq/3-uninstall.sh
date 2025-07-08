@@ -3,7 +3,7 @@ set -e
 
 NS=prod-mock
 
-kubectl delete -f ingress.yaml
+kubectl -n $NS delete ingress rabbitmq-ingress
 
 helm uninstall rabbitmq -n $NS
 

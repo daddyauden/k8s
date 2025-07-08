@@ -14,10 +14,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - "rabbitmq.test.com"
-    secretName: tls-test-com
+    - rabbitmq.${DOMAIN}
+    secretName: tls-domain
   rules:
-  - host: rabbitmq.test.com
+  - host: rabbitmq.${DOMAIN}
     http:
       paths:
       - path: /

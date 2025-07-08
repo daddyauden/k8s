@@ -18,7 +18,7 @@ kubectl create secret generic rabbitmq-secrets --from-literal=rabbitmq-username=
 
 helm install rabbitmq bitnami/rabbitmq --version 16.0.9 --namespace $NS --create-namespace -f values.yaml
 
-kubectl apply -f ingress.yaml
+envsubst < ingress.yaml | kubectl apply -f -
 
 # after update values.yaml, run it
 # helm upgrade rabbitmq bitnami/rabbitmq --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block

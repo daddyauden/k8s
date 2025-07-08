@@ -1,0 +1,50 @@
+expose:
+  type: clusterIP
+  tls:
+    enabled: false
+  clusterIP:
+    name: harbor
+    ports:
+      httpPort: 80
+      httpsPort: 443
+
+externalURL: https://registry."{{ .Values.domain | default "test.com" }}"
+
+existingSecretAdminPassword: harbor-secrets
+existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
+
+database:
+  type: external
+  external:
+    host: "postgresql"
+    port: "5432"
+    username: "harbor"
+    coreDatabase: "harbor"
+    existingSecret: "postgres-secrets"
+
+redis:
+  type: external
+  external:
+    addr: "redis-master:6379"
+    existingSecret: "redis-secrets"
+
+exporter:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+persistence:
+  enabled: true
+  persistentVolumeClaim:
+    registry:
+      storageClass: "rook-ceph-block"
+      size: 10Gi
+    jobservice:
+      jobLog:
+        storageClass: "rook-ceph-block"
+    trivy:
+      storageClass: "rook-ceph-block"

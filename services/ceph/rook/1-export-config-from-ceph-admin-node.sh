@@ -20,7 +20,7 @@ cd rook/deploy/examples/external
 sudo python3 create-external-cluster-resources.py \
 --rbd-data-pool-name replicapool \
 --cephfs-filesystem-name myfs \
---rgw-endpoint https://us-east-s3.test.com:443 \
+--rgw-endpoint https://us-east-s3.$DOMAIN:443 \
 --rgw-realm-name america \
 --rgw-zonegroup-name us-east \
 --rgw-zone-name us-east-a \
@@ -37,7 +37,7 @@ sudo python3 create-external-cluster-resources.py \
 # cephfs-metadata-pool-name = myfs_metadata
 # cephfs-data-pool-name = myfs_data
 # rbd-data-pool-name = replicapool
-# rgw-endpoint = https://us-east-s3.test.com:443
+# rgw-endpoint = https://us-east-s3.$DOMAIN:443
 # skip-monitoring-endpoint = True
 # rgw-realm-name = america
 # rgw-zone-name = us-east-a

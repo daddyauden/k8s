@@ -10,18 +10,14 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      proxy_set_header X-Forwarded-Host $host:$server_port;
-      proxy_set_header X-Forwarded-Server $host;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - "jenkins.test.com"
-    secretName: tls-test-com
+    - jenkins.${DOMAIN}
+    secretName: tls-domain
   rules:
-  - host: jenkins.test.com
+  - host: jenkins.${DOMAIN}
     http:
       paths:
       - path: /

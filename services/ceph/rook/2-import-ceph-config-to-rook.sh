@@ -11,7 +11,6 @@ kubectl apply -f operator.yaml
 
 sleep 1m
 
-cd external
 kubectl apply -f external/common-external.yaml
 
 # add some spec
@@ -37,7 +36,7 @@ cephfs-filesystem-name = myfs
 cephfs-metadata-pool-name = myfs_metadata
 cephfs-data-pool-name = myfs_data
 rbd-data-pool-name = replicapool
-rgw-endpoint = https://us-east-s3.test.com:443
+rgw-endpoint = https://us-east-s3.$DOMAIN:443
 skip-monitoring-endpoint = True
 rgw-realm-name = america
 rgw-zone-name = us-east-a

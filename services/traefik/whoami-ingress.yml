@@ -7,7 +7,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.tls: "true"
 spec:
   rules:
-  - host: www.test.com
+  - host: www.${DOMAIN}
     http:
       paths:
       - path: /
@@ -17,7 +17,7 @@ spec:
             name: whoami
             port:
               name: web
-  - host: traefik.test.com
+  - host: traefik.${DOMAIN}
     http:
       paths:
       - path: /
@@ -29,5 +29,5 @@ spec:
               name: dashboard
   tls:
   - hosts:
-    - "*.test.com"
-    secretName: ss-com-tls
+    - "*.${DOMAIN}""
+    secretName: tls-domain

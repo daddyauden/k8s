@@ -1,0 +1,86 @@
+global:
+  defaultStorageClass: rook-ceph-block
+
+auth:
+  useSecret: true
+  existingSecret: minio-secrets
+  rootUserSecretKey: accesskey
+  rootPasswordSecretKey: secretkey
+
+# mode: distributed
+# statefulset:
+#   podManagementPolicy: Parallel
+#   replicaCount: 4
+#   zones: 1
+#   drivesPerNode: 1
+
+mode: standalone
+
+resources:
+  requests:
+    cpu: 1
+    memory: 256Mi
+  limits:
+    cpu: 2
+    memory: 512Mi
+
+startupProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 20
+  timeoutSeconds: 20
+  successThreshold: 1
+  failureThreshold: 10
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 5
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 10
+  periodSeconds: 5
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+persistence:
+  enabled: true
+  storageClass: rook-ceph-block
+  size: 50Gi
+
+console:
+  enabled: true
+  replicaCount: 1
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 20
+    successThreshold: 1
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 10
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 10
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+  resources:
+    requests:
+      cpu: 1
+      memory: 256Mi
+    limits:
+      cpu: 2
+      memory: 512Mi

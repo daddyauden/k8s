@@ -5,8 +5,6 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
 helm repo update
 
-helm show values ingress-nginx/ingress-nginx > values-origin.yaml
-
 NS=ingress-nginx
 
 kubectl apply -f - <<EOF
@@ -22,7 +20,7 @@ metadata:
 EOF
 
 # secret should be set in the same namespace with ingress, in my case most service set in prod-mock namespace
-kubectl create secret tls tls-test-com --namespace=prod-mock --cert=pem/tls.crt --key=pem/tls.key
+kubectl create secret tls tls-domain --namespace=prod-mock --cert=pem/tls.crt --key=pem/tls.key
 
 helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.12.3 --namespace $NS --create-namespace -f values.yaml
 

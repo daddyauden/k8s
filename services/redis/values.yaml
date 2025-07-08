@@ -1,8 +1,6 @@
 global:
   storageClass: rook-ceph-block
 
-architecture: replication
-
 auth:
   enabled: true
   existingSecret: redis-secrets
@@ -13,6 +11,8 @@ commonConfiguration: |-
   save 900 1
   save 300 10
   save 60 10000
+
+architecture: standalone
 
 master:
   count: 1
@@ -25,105 +25,108 @@ master:
       cpu: 1
       memory: 256Mi
     limits:
-      cpu: 2
-      memory: 512Mi
-  terminationGracePeriodSeconds: 60
-  startupProbe:
-    enabled: true
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 20
-    successThreshold: 1
-    failureThreshold: 30
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 20
-    successThreshold: 1
-    failureThreshold: 10
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 15
-    successThreshold: 1
-    failureThreshold: 10
-
-replica:
-  replicaCount: 3
-  persistence:
-    enabled: true
-    storageClass: rook-ceph-block
-    size: 5Gi
-  resources:
-    requests:
-      cpu: 2
-      memory: 256Mi
-    limits:
-      cpu: 2
-      memory: 512Mi
-  terminationGracePeriodSeconds: 60
-  startupProbe:
-    enabled: true
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 20
-    successThreshold: 1
-    failureThreshold: 30
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 60
-    periodSeconds: 20
-    timeoutSeconds: 20
-    successThreshold: 1
-    failureThreshold: 10
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 90
-    periodSeconds: 15
-    timeoutSeconds: 15
-    successThreshold: 1
-    failureThreshold: 10
-
-sentinel:
-  enabled: true
-  masterSet: mymaster
-  quorum: 2
-  replicas: 3
-  terminationGracePeriodSeconds: 60
-  resources:
-    requests:
       cpu: 1
-      memory: 256Mi
-    limits:
-      cpu: 2
       memory: 512Mi
+  disableCommands:
+    - FLUSHDB
+  terminationGracePeriodSeconds: 60
   startupProbe:
     enabled: true
     initialDelaySeconds: 60
-    periodSeconds: 15
-    timeoutSeconds: 15
-    failureThreshold: 20
+    periodSeconds: 20
+    timeoutSeconds: 20
+    successThreshold: 1
+    failureThreshold: 30
   readinessProbe:
     enabled: true
     initialDelaySeconds: 60
-    periodSeconds: 10
-    timeoutSeconds: 10
+    periodSeconds: 20
+    timeoutSeconds: 20
+    successThreshold: 1
     failureThreshold: 10
   livenessProbe:
     enabled: true
     initialDelaySeconds: 90
     periodSeconds: 15
-    timeoutSeconds: 10
+    timeoutSeconds: 15
+    successThreshold: 1
     failureThreshold: 10
+
+# architecture: replication
+# replica:
+#   replicaCount: 3
+#   persistence:
+#     enabled: true
+#     storageClass: rook-ceph-block
+#     size: 5Gi
+#   resources:
+#     requests:
+#       cpu: 1
+#       memory: 256Mi
+#     limits:
+#       cpu: 1
+#       memory: 512Mi
+#   terminationGracePeriodSeconds: 60
+#   startupProbe:
+#     enabled: true
+#     initialDelaySeconds: 60
+#     periodSeconds: 20
+#     timeoutSeconds: 20
+#     successThreshold: 1
+#     failureThreshold: 30
+#   readinessProbe:
+#     enabled: true
+#     initialDelaySeconds: 60
+#     periodSeconds: 20
+#     timeoutSeconds: 20
+#     successThreshold: 1
+#     failureThreshold: 10
+#   livenessProbe:
+#     enabled: true
+#     initialDelaySeconds: 90
+#     periodSeconds: 15
+#     timeoutSeconds: 15
+#     successThreshold: 1
+#     failureThreshold: 10
+
+# sentinel:
+#   enabled: true
+#   masterSet: mymaster
+#   quorum: 2
+#   replicas: 3
+#   terminationGracePeriodSeconds: 60
+#   resources:
+#     requests:
+#       cpu: 1
+#       memory: 256Mi
+#     limits:
+#       cpu: 1
+#       memory: 512Mi
+#   startupProbe:
+#     enabled: true
+#     initialDelaySeconds: 60
+#     periodSeconds: 15
+#     timeoutSeconds: 15
+#     failureThreshold: 20
+#   readinessProbe:
+#     enabled: true
+#     initialDelaySeconds: 60
+#     periodSeconds: 10
+#     timeoutSeconds: 10
+#     failureThreshold: 10
+#   livenessProbe:
+#     enabled: true
+#     initialDelaySeconds: 90
+#     periodSeconds: 15
+#     timeoutSeconds: 10
+#     failureThreshold: 10
 
 volumePermissions:
   enabled: true
   resources:
     requests:
-      cpu: 2
+      cpu: 1
       memory: 256Mi
     limits:
-      cpu: 2
+      cpu: 1
       memory: 512Mi
