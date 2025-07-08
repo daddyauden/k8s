@@ -5,8 +5,6 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo update
 
-NS=prod-mock
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace
@@ -32,10 +30,10 @@ envsubst < ingress.yaml | kubectl apply -f -
 # after update values.yaml, run it
 # helm upgrade minio bitnami/minio --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block
 
-# export ROOT_USER=$(kubectl get secret --namespace prod-mock minio-secrets -o jsonpath="{.data.rootUser}" | base64 -d)
-# export ROOT_PASSWORD=$(kubectl get secret --namespace prod-mock minio-secrets -o jsonpath="{.data.rootPassword}" | base64 -d)
+# export ROOT_USER=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.rootUser}" | base64 -d)
+# export ROOT_PASSWORD=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.rootPassword}" | base64 -d)
 
-# kubectl run --namespace prod-mock minio-client \
+# kubectl run --namespace $NS minio-client \
 #      --rm --tty -i --restart='Never' \
 #      --env MINIO_SERVER_ROOT_USER=$ROOT_USER \
 #      --env MINIO_SERVER_ROOT_PASSWORD=$ROOT_PASSWORD \

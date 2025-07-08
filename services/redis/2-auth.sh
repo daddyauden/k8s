@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
-
 REDIS_PASSWORD=$(kubectl get secret --namespace $NS redis-secrets -o jsonpath="{.data.redis-password}" | base64 -d)
 
 echo $REDIS_PASSWORD

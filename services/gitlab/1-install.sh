@@ -5,8 +5,6 @@ helm repo add gitlab http://charts.gitlab.io/
 
 helm repo update
 
-NS=prod-mock
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace
@@ -34,4 +32,4 @@ EOF
 helm install gitlab gitlab/gitlab --version 9.1.1 --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN"
 
 # after update values.yaml, run it
-# helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN" --set global.defaultStorageClass=rook-ceph-block

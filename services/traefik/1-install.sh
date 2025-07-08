@@ -5,8 +5,6 @@ helm repo add traefik https://traefik.github.io/charts
 
 helm repo update
 
-NS=prod-mock
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace

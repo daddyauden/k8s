@@ -5,8 +5,6 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm repo update
 
-NS=prod-mock
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace

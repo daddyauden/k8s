@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
-
 # Credentials:
 # Username
 # Username = rabbitmq-admin

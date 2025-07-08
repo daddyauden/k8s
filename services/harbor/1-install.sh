@@ -5,8 +5,6 @@ helm repo add harbor https://helm.goharbor.io
 
 helm repo update
 
-NS=prod-mock
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace

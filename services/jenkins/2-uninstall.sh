@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
-
 kubectl -n $NS delete ingress jenkins-ingress
 
 helm uninstall jenkins -n $NS

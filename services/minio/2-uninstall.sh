@@ -1,8 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
-
 kubectl -n $NS delete ingress minio-s3-ingress
 
 kubectl -n $NS delete ingress minio-console-ingress
