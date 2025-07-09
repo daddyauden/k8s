@@ -1,3 +1,5 @@
+domain: example.com
+
 global:
   time_zone: UTC
   edition: ce
@@ -23,16 +25,16 @@ global:
       nginx.ingress.kubernetes.io/ssl-redirect: "true"
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
-    domain: "{{ .Values.domain | default "test.com" }}"
+    domain: {{ .Values.domain }}
     externalIP: 10.20.1.1
     https: false
     gitlab:
       https: true
-      name: gitlab."{{ .Values.domain | default "test.com" }}"
+      name: gitlab.{{ .Values.domain }}
     pages:
       https: true
-      name: pages."{{ .Values.domain | default "test.com" }}"
-    ssh: gitlab."{{ .Values.domain | default "test.com" }}"
+      name: pages.{{ .Values.domain }}
+    ssh: gitlab.{{ .Values.domain }}
   rails:
     bootsnap:
       enabled: false

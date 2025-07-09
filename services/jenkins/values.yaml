@@ -1,5 +1,7 @@
+domain: example.com
+
 controller:
-  jenkinsUrl: https://jenkins."{{ .Values.domain | default "test.com" }}"
+  jenkinsUrl: https://jenkins.{{ .Values.domain }}
   jenkinsUriPrefix: /
   probes:
     startupProbe:
