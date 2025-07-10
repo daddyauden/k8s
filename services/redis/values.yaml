@@ -130,3 +130,46 @@ volumePermissions:
     limits:
       cpu: 1
       memory: 512Mi
+
+metrics:
+  enabled: true
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 20
+    timeoutSeconds: 20
+    successThreshold: 1
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus-operator
+    interval: 30s
+    scrapeTimeout: 10s
+  podMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus-operator
+    interval: 30s
+    scrapeTimeout: 10s
+  resources:
+    requests:
+      cpu: 500m
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 512Mi

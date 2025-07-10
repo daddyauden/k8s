@@ -2,3 +2,4 @@
 !/tf/**/*.tf
 /services/ceph/rook/github/*
 /services/rook/github/*
+output.yaml
