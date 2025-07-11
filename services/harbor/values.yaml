@@ -50,3 +50,10 @@ persistence:
         storageClass: "rook-ceph-block"
     trivy:
       storageClass: "rook-ceph-block"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus

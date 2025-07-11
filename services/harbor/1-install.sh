@@ -21,4 +21,4 @@ helm install harbor harbor/harbor --version 1.17.1 --namespace $NS --create-name
 envsubst < ingress.yaml | kubectl apply -f -
 
 # after update values.yaml, run it
-# helm upgrade harbor harbor/harbor --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade harbor harbor/harbor --install --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN" --set global.defaultStorageClass=rook-ceph-block

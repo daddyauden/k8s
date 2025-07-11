@@ -125,6 +125,9 @@ prometheus:
     replicas: 1
     retention: 120h
     logLevel: info
+    serviceMonitorSelector:
+      matchLabels:
+        release: prometheus
     maximumStartupDurationSeconds: 120
     storageSpec:
       volumeClaimTemplate:

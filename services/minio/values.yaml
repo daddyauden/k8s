@@ -84,3 +84,10 @@ console:
     limits:
       cpu: 2
       memory: 512Mi
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
