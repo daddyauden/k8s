@@ -141,8 +141,8 @@ gitlab:
   webservice:
     enabled: true
     minReplicas: 1
-    maxReplicas: 2
-    maxUnavailable: 1
+    maxReplicas: 1
+    maxUnavailable: 0
     workerProcesses: 2
     metrics:
       enabled: false
@@ -156,10 +156,10 @@ gitlab:
       serviceName: redis-master
     resources:
       requests:
-        cpu: 2
-        memory: 2Gi
+        cpu: 500m
+        memory: 1Gi
       limits:
-        cpu: 2
+        cpu: 1
         memory: 2Gi
     trusted_proxies:
       - 10.20.1.1/32
@@ -170,10 +170,10 @@ gitlab:
           enabled: false
       resources:
         requests:
-          cpu: 2
-          memory: 2Gi
+          cpu: 500m
+          memory: 1Gi
         limits:
-          cpu: 2
+          cpu: 1
           memory: 2Gi
   sidekiq:
     enabled: true
@@ -190,10 +190,10 @@ gitlab:
       serviceName: redis-master
     resources:
       requests:
-        cpu: 2
-        memory: 2Gi
+        cpu: 500m
+        memory: 1Gi
       limits:
-        cpu: 2
+        cpu: 1
         memory: 2Gi
     readinessProbe:
       initialDelaySeconds: 60
@@ -233,10 +233,6 @@ gitlab:
       requests:
         cpu: 350m
         memory: 350Mi
-    affinity: {}
-    persistence:
-      storageClass: rook-ceph-block
-      size: 10Gi
   gitaly:
     metrics:
       enabled: false
@@ -254,6 +250,16 @@ gitlab:
     ingress:
       tls:
         secretName: tls-domain
+  gitlab-exporter:
+    enabled: true
+    metrics:
+      enabled: true
+      port: 9168
+      path: /metrics
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: prometheus
 
 certmanager:
   install: false
