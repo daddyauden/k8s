@@ -1,16 +1,20 @@
-domain: example.com
+externalURL: ""
 
 expose:
-  type: clusterIP
+  type: ingress
   tls:
-    enabled: false
-  clusterIP:
-    name: harbor
-    ports:
-      httpPort: 80
-      httpsPort: 443
-
-externalURL: https://registry.{{ .Values.domain }}
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: tls-domain
+  ingress:
+    hosts:
+      core: ""
+    className: "nginx"
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
 existingSecretAdminPassword: harbor-secrets
 existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD

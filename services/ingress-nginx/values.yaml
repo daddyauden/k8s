@@ -1,6 +1,8 @@
 controller:
   replicaCount: 3
   progressDeadlineSeconds: 300
+  extraArgs:
+    enable-ssl-passthrough: "true"
   service:
     type: NodePort
     nodePorts:
@@ -10,10 +12,10 @@ controller:
     enabled: false
   metrics:
     enabled: true
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "10254"
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
   resources:
     requests:
       cpu: 1

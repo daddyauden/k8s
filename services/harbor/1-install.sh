@@ -16,9 +16,7 @@ kubectl create secret generic harbor-secrets \
   --from-literal=HARBOR_ADMIN_PASSWORD=Harbor12345 \
   -n $NS
 
-helm install harbor harbor/harbor --version 1.17.1 --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN"
-
-envsubst < ingress.yaml | kubectl apply -f -
+helm install harbor harbor/harbor --version 1.17.1 --namespace $NS --create-namespace -f values.yaml --set expose.ingress.hosts.core="registry.$DOMAIN" --set externalURL="https://registry.$DOMAIN"
 
 # after update values.yaml, run it
-# helm upgrade harbor harbor/harbor --install --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN" --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade harbor harbor/harbor --install --namespace $NS --create-namespace -f values.yaml --set expose.ingress.hosts.core="registry.$DOMAIN" --set externalURL="https://registry.$DOMAIN"

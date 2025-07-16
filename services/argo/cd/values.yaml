@@ -1,0 +1,254 @@
+global:
+  domain: ""
+  addPrometheusAnnotations: true
+
+controller:
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+server:
+  replicas: 1
+  extensions:
+    enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 50m
+        memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    path: /
+    pathType: Prefix
+    tls: false
+    extraTls:
+      - secretName: tls-domain
+
+repoServer:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+applicationSet:
+  allowAnyNamespace: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    path: /api/webhook
+    pathType: Prefix
+    tls: false
+    extraTls:
+      - secretName: tls-domain
+
+commitServer:
+  enabled: true
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+notifications:
+  enabled: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+dex:
+  enabled: true
+  extraArgs:
+    - --web=http://0.0.0.0:5558
+  resources:
+   requests:
+     cpu: 10m
+     memory: 32Mi
+   limits:
+     cpu: 50m
+     memory: 64Mi
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+redis:
+  enabled: false
+
+redis-ha:
+  enabled: false
+
+redisSecretInit:
+  enabled: false
+
+externalRedis:
+  host: "redis-master"
+  existingSecret: "redis-secrets"
