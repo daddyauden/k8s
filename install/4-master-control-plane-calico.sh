@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-kubectl apply -f calico.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/operator-crds.yaml
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.30.2/manifests/tigera-operator.yaml
 
-kubectl get pods -n kube-system | grep calico
+kubectl create -f custom-resources.yaml
+
+kubectl get pods -n calico-system
 
 sleep 1m
 

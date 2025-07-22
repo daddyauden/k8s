@@ -10,24 +10,6 @@ grafana:
   defaultDashboardsInterval: 1m
   adminUser: admin
   adminPassword: prom-operator
-  additionalDataSources:
-    - name: Loki
-      type: loki
-      access: proxy
-      url: http://loki-gateway
-    - name: Tempo
-      type: tempo
-      access: proxy
-      url: http://tempo:3200
-    - name: Mimir
-      type: prometheus
-      access: proxy
-      url: http://mimir-gateway/prometheus
-      isDefault: false
-    # - name: Pyroscope
-    #   type: pyroscope
-    #   access: proxy
-    #   url: http://pyroscope:4040
   ingress:
     enabled: true
     ingressClassName: nginx
@@ -71,32 +53,9 @@ prometheus:
   prometheusSpec:
     replicas: 1
     maximumStartupDurationSeconds: 120
-    remoteRead:
-      - url: http://mimir-gateway/prometheus
     remoteWrite:
       - url: http://mimir-gateway/api/v1/push
-    serviceMonitorNamespaceSelector:
-      matchLabels:
-        release: prometheus
     serviceMonitorSelector:
-      matchLabels:
-        release: prometheus
-    podMonitorNamespaceSelector:
-      matchLabels:
-        release: prometheus
-    podMonitorSelector:
-      matchLabels:
-        release: prometheus
-    probeNamespaceSelector:
-      matchLabels:
-        release: prometheus
-    probeSelector:
-      matchLabels:
-        release: prometheus
-    scrapeConfigNamespaceSelector:
-      matchLabels:
-        release: prometheus
-    scrapeConfigSelector:
       matchLabels:
         release: prometheus
     storageSpec:

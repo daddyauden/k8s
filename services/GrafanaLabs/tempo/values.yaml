@@ -2,7 +2,7 @@ replicas: 1
 
 tempo:
   reportingEnabled: false
-  multitenancyEnabled: true
+  multitenancyEnabled: false
   storage:
     trace:
       backend: s3

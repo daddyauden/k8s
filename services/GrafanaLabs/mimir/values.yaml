@@ -22,7 +22,7 @@ mimir:
         bucket_name: mimir-alertmanager
     blocks_storage:
       s3:
-        bucket_name: mimir-tsdb
+        bucket_name: mimir-blocks
     ruler_storage:
       s3:
         bucket_name: mimir-ruler

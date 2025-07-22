@@ -48,14 +48,14 @@ loki:
       http_config: {}
       backoff_config: {}
       disable_dualstack: true
-  object_store:
-    type: s3
-    s3:
-      endpoint: ""
-      region: us-east-1
-      access_key_id: beb8a305683f2dafa8750dbf
-      secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
-      insecure: false
+    object_store:
+      type: s3
+      s3:
+        endpoint: ""
+        region: us-east-1
+        access_key_id: beb8a305683f2dafa8750dbf
+        secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
+        insecure: false
 
 ######################################################################################################################
 #
