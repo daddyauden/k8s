@@ -22,11 +22,11 @@ master:
     size: 5Gi
   resources:
     requests:
-      cpu: 1
-      memory: 256Mi
+      cpu: 100m
+      memory: 128Mi
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 200m
+      memory: 256Mi
   disableCommands:
     - FLUSHDB
   terminationGracePeriodSeconds: 60
@@ -61,11 +61,11 @@ master:
 #     size: 5Gi
 #   resources:
 #     requests:
-#       cpu: 1
-#       memory: 256Mi
+#       cpu: 100m
+#       memory: 128Mi
 #     limits:
-#       cpu: 1
-#       memory: 512Mi
+#       cpu: 200m
+#       memory: 256Mi
 #   terminationGracePeriodSeconds: 60
 #   startupProbe:
 #     enabled: true
@@ -97,11 +97,11 @@ master:
 #   terminationGracePeriodSeconds: 60
 #   resources:
 #     requests:
-#       cpu: 1
-#       memory: 256Mi
+#       cpu: 100m
+#       memory: 128Mi
 #     limits:
-#       cpu: 1
-#       memory: 512Mi
+#       cpu: 100m
+#       memory: 256Mi
 #   startupProbe:
 #     enabled: true
 #     initialDelaySeconds: 60
@@ -125,11 +125,11 @@ volumePermissions:
   enabled: true
   resources:
     requests:
-      cpu: 1
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi
 
 metrics:
   enabled: true
@@ -160,8 +160,8 @@ metrics:
     failureThreshold: 3
   resources:
     requests:
-      cpu: 500m
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi

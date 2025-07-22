@@ -9,9 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - jenkins.${DOMAIN}
-    secretName: tls-domain
+  - secretName: tls-domain
   rules:
   - host: jenkins.${DOMAIN}
     http:

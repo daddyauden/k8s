@@ -40,10 +40,10 @@ primary:
     successThreshold: 1
   resources:
     requests:
-      cpu: 1
+      cpu: 300m
       memory: 256Mi
     limits:
-      cpu: 1
+      cpu: 600m
       memory: 512Mi
   persistence:
     enabled: true
@@ -81,10 +81,10 @@ primary:
 #     successThreshold: 1
 #   resources:
 #     requests:
-#       cpu: 1
+#       cpu: 300m
 #       memory: 256Mi
 #     limits:
-#       cpu: 1
+#       cpu: 600m
 #       memory: 512Mi
 #   persistence:
 #     enabled: true
@@ -95,16 +95,17 @@ volumePermissions:
   enabled: true
   resources:
     requests:
-      cpu: 1
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi
 
 metrics:
   enabled: true
   serviceMonitor:
     enabled: true
+    interval: 120s
     labels:
       release: prometheus
   startupProbe:
@@ -130,8 +131,8 @@ metrics:
     failureThreshold: 3
   resources:
     requests:
-      cpu: 500m
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi

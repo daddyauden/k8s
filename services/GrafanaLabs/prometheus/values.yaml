@@ -1,0 +1,110 @@
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    replicas: 1
+
+grafana:
+  enabled: true
+  defaultDashboardsTimezone: America/Toronto
+  defaultDashboardsEditable: true
+  defaultDashboardsInterval: 1m
+  adminUser: admin
+  adminPassword: prom-operator
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      access: proxy
+      url: http://loki-gateway
+    - name: Tempo
+      type: tempo
+      access: proxy
+      url: http://tempo:3200
+    - name: Mimir
+      type: prometheus
+      access: proxy
+      url: http://mimir-gateway/prometheus
+      isDefault: false
+    # - name: Pyroscope
+    #   type: pyroscope
+    #   access: proxy
+    #   url: http://pyroscope:4040
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hosts:
+      - ""
+    path: /
+    tls:
+      - secretName: tls-domain
+  persistence:
+    enabled: true
+    type: sts
+    storageClassName: rook-ceph-block
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+    finalizers:
+      - kubernetes.io/pvc-protection
+
+prometheusOperator:
+  enabled: true
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 10
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 10
+    successThreshold: 1
+
+prometheus:
+  enabled: true
+  prometheusSpec:
+    replicas: 1
+    maximumStartupDurationSeconds: 120
+    remoteRead:
+      - url: http://mimir-gateway/prometheus
+    remoteWrite:
+      - url: http://mimir-gateway/api/v1/push
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        release: prometheus
+    serviceMonitorSelector:
+      matchLabels:
+        release: prometheus
+    podMonitorNamespaceSelector:
+      matchLabels:
+        release: prometheus
+    podMonitorSelector:
+      matchLabels:
+        release: prometheus
+    probeNamespaceSelector:
+      matchLabels:
+        release: prometheus
+    probeSelector:
+      matchLabels:
+        release: prometheus
+    scrapeConfigNamespaceSelector:
+      matchLabels:
+        release: prometheus
+    scrapeConfigSelector:
+      matchLabels:
+        release: prometheus
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: rook-ceph-block
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 20Gi

@@ -14,9 +14,9 @@ EOF
 
 kubectl create secret generic jenkins-secrets --from-literal=jenkins-username=jenkins-admin --from-literal=jenkins-password=jenkins-admin -n $NS
 
-helm install jenkins jenkins/jenkins --version 5.8.64 --namespace $NS --create-namespace -f values.yaml
+helm install jenkins jenkins/jenkins --version 5.8.64 --namespace $NS --create-namespace -f values.yaml --set controller.ingress.hostname="jenkins.$DOMAIN" --set controller.jenkinsUrl="jenkins.$DOMAIN"
 
-envsubst < ingress.yaml | kubectl apply -f -
+# envsubst < ingress.yaml | kubectl apply -f -
 
 # after update values.yaml, run it
-# helm upgrade jenkins jenkins/jenkins --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade jenkins jenkins/jenkins --install --namespace $NS --create-namespace -f values.yaml --set controller.ingress.hostname="jenkins.$DOMAIN" --set controller.jenkinsUrl="jenkins.$DOMAIN"

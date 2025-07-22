@@ -22,5 +22,4 @@ kubectl create secret generic postgres-secrets \
 
 helm install postgresql bitnami/postgresql --version 16.7.15 --namespace $NS --create-namespace -f values.yaml
 
-# after update values.yaml, run it
-# helm upgrade postgresql bitnami/postgresql --install --namespace $NS --create-namespace -f values.yaml --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade postgresql bitnami/postgresql --install --namespace $NS --create-namespace -f values.yaml

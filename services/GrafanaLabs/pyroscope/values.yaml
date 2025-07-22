@@ -1,0 +1,39 @@
+pyroscope:
+  replicaCount: 1
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+  extraEnvVars:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClassName: rook-ceph-block
+    accessModes:
+      - ReadWriteOnce
+  structuredConfig:
+    storage:
+      backend: s3
+      s3:
+        endpoint: ""
+        bucket_name: pyroscope-data
+        access_key_id: beb8a305683f2dafa8750dbf
+        secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
+        insecure: false
+
+alloy:
+  enabled: false
+
+agent:
+  enabled: false
+
+minio:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false

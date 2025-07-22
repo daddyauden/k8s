@@ -26,10 +26,10 @@ server:
     enabled: true
     resources:
       requests:
-        cpu: 10m
+        cpu: 50m
         memory: 64Mi
       limits:
-        cpu: 50m
+        cpu: 100m
         memory: 128Mi
   resources:
     requests:
@@ -77,8 +77,8 @@ repoServer:
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
       cpu: 100m
       memory: 128Mi
@@ -109,8 +109,8 @@ applicationSet:
   replicas: 1
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
       cpu: 100m
       memory: 128Mi
@@ -177,8 +177,8 @@ notifications:
   enabled: true
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
       cpu: 100m
       memory: 128Mi
@@ -205,16 +205,14 @@ notifications:
         release: prometheus
 
 dex:
-  enabled: true
-  extraArgs:
-    - --web=http://0.0.0.0:5558
+  enabled: false
   resources:
-   requests:
-     cpu: 10m
-     memory: 32Mi
-   limits:
-     cpu: 50m
-     memory: 64Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
   startupProbe:
     enabled: true
     initialDelaySeconds: 90

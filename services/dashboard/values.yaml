@@ -165,11 +165,11 @@ auth:
     # TODO: Validate configuration
     resources:
       requests:
-        cpu: 100m
-        memory: 200Mi
+        cpu: 50m
+        memory: 64Mi
       limits:
-        cpu: 250m
-        memory: 400Mi
+        cpu: 100m
+        memory: 128Mi
   automountServiceAccountToken: true
   volumes:
     # Create on-disk volume to store exec logs (required)
@@ -220,11 +220,11 @@ api:
     # TODO: Validate configuration
     resources:
       requests:
-        cpu: 100m
-        memory: 200Mi
+        cpu: 50m
+        memory: 64Mi
       limits:
-        cpu: 250m
-        memory: 400Mi
+        cpu: 100m
+        memory: 128Mi
   automountServiceAccountToken: true
   # Additional volumes
   # - name: dashboard-kubeconfig
@@ -281,11 +281,11 @@ web:
     # TODO: Validate configuration
     resources:
       requests:
-        cpu: 100m
-        memory: 200Mi
+        cpu: 50m
+        memory: 64Mi
       limits:
-        cpu: 250m
-        memory: 400Mi
+        cpu: 100m
+        memory: 128Mi
   automountServiceAccountToken: true
   # Additional volumes
   # - name: dashboard-kubeconfig
@@ -339,11 +339,11 @@ metricsScraper:
     # TODO: Validate configuration
     resources:
       requests:
-        cpu: 100m
-        memory: 200Mi
+        cpu: 50m
+        memory: 64Mi
       limits:
-        cpu: 250m
-        memory: 400Mi
+        cpu: 100m
+        memory: 128Mi
     livenessProbe:
       httpGet:
         scheme: HTTP

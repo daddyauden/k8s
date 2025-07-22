@@ -1,8 +1,17 @@
-domain: example.com
-
 controller:
-  jenkinsUrl: https://jenkins.{{ .Values.domain }}
+  jenkinsUrl: ""
+  jenkinsUrlProtocol: "https"
   jenkinsUriPrefix: /
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    hostname: ""
+    path: /
+    tls:
+      - secretName: tls-domain
   probes:
     startupProbe:
       httpGet:
@@ -49,11 +58,11 @@ controller:
         allowAnonymousRead: false
   initContainerResources:
     requests:
-      cpu: 1
-      memory: 512Mi
+      cpu: 300m
+      memory: 500Mi
     limits:
-      cpu: 2
-      memory: 1024Mi
+      cpu: 600m
+      memory: 1000Mi
   initContainerEnv:
     - name: JENKINS_USER
       valueFrom:
@@ -81,13 +90,18 @@ controller:
     existingSecret: jenkins-secrets
     userKey: jenkins-username
     passwordKey: jenkins-password
+  prometheus:
+    enabled: true
+    serviceMonitorAdditionalLabels:
+      release: prometheus
+    scrapeInterval: 120s
   resources:
     requests:
-      cpu: 1
-      memory: 512Mi
+      cpu: 300m
+      memory: 500Mi
     limits:
-      cpu: 2
-      memory: 1024Mi
+      cpu: 600m
+      memory: 1000Mi
   serviceEnabled: true
   serviceType: ClusterIP
 
@@ -96,11 +110,11 @@ agent:
   customJenkinsLabels: default
   resources:
     requests:
-      cpu: 1
-      memory: 512Mi
+      cpu: 300m
+      memory: 500Mi
     limits:
-      cpu: 2
-      memory: 1024Mi
+      cpu: 600m
+      memory: 1000Mi
   livenessProbe:
     initialDelaySeconds: 90
     periodSeconds: 15

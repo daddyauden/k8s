@@ -71,3 +71,6 @@ export CEPHFS_STORAGE_CLASS_NAME=rook-cephfs
 chmod +x import-external-cluster.sh
 
 ./import-external-cluster.sh
+
+# change k8s default storageclass
+kubectl patch storageclass rook-ceph-block -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'

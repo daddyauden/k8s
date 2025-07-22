@@ -23,13 +23,13 @@ stringData:
   connection: |
     provider: AWS
     region: us-east-1
-    aws_access_key_id: b05c00279ecab4f560988836
-    aws_secret_access_key: 12cb9a13a2c21903c84efb2bcf66bbb45613305e33bbf0f1e9616a4915505e4a
+    aws_access_key_id: beb8a305683f2dafa8750dbf
+    aws_secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
     endpoint: https://s3.$DOMAIN
     path_style: true
 EOF
 
-helm install gitlab gitlab/gitlab --version 9.1.1 --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN"
+helm install gitlab gitlab/gitlab --version 9.1.1 --namespace $NS --create-namespace -f values.yaml --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="gitlab.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
 
 # after update values.yaml, run it
-# helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml --set domain="$DOMAIN" --set global.defaultStorageClass=rook-ceph-block
+# helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml -f values.yaml --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="gitlab.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"

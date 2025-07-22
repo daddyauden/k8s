@@ -18,5 +18,11 @@ kubectl create secret generic harbor-secrets \
 
 helm install harbor harbor/harbor --version 1.17.1 --namespace $NS --create-namespace -f values.yaml --set expose.ingress.hosts.core="registry.$DOMAIN" --set externalURL="https://registry.$DOMAIN"
 
-# after update values.yaml, run it
+kubectl create secret docker-registry regcred \
+  --docker-server=registry.$DOMAIN \
+  --docker-username=$REGISTRY_USERNAME \
+  --docker-password=$REGISTRY_PASSWORD \
+  --docker-email=$REGISTRY_EMAIL \
+  -n $NS
+
 # helm upgrade harbor harbor/harbor --install --namespace $NS --create-namespace -f values.yaml --set expose.ingress.hosts.core="registry.$DOMAIN" --set externalURL="https://registry.$DOMAIN"

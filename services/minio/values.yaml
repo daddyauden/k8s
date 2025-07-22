@@ -18,11 +18,11 @@ mode: standalone
 
 resources:
   requests:
-    cpu: 1
-    memory: 256Mi
+    cpu: 400m
+    memory: 400Mi
   limits:
-    cpu: 2
-    memory: 512Mi
+    cpu: 800m
+    memory: 800Mi
 
 startupProbe:
   enabled: true
@@ -53,6 +53,18 @@ persistence:
   storageClass: rook-ceph-block
   size: 50Gi
 
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  hostname: ""
+  path: /
+  pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  extraTls:
+    - secretName: tls-domain
+
 console:
   enabled: true
   replicaCount: 1
@@ -79,11 +91,22 @@ console:
     failureThreshold: 3
   resources:
     requests:
-      cpu: 1
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 2
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hostname: ""
+    path: /
+    pathType: Prefix
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    extraTls:
+      - secretName: tls-domain
 
 metrics:
   enabled: true
@@ -91,3 +114,4 @@ metrics:
     enabled: true
     labels:
       release: prometheus
+    interval: 120s

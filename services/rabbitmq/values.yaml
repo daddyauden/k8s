@@ -17,11 +17,11 @@ replicaCount: 1
 
 resources:
   requests:
-    cpu: 1
-    memory: 256Mi
+    cpu: 200m
+    memory: 128Mi
   limits:
-    cpu: 2
-    memory: 512Mi
+    cpu: 400m
+    memory: 256Mi
 
 persistence:
   enabled: true
@@ -32,15 +32,29 @@ volumePermissions:
   enabled: true
   resources:
     requests:
-      cpu: 1
-      memory: 256Mi
+      cpu: 50m
+      memory: 64Mi
     limits:
-      cpu: 2
-      memory: 512Mi
+      cpu: 100m
+      memory: 128Mi
+
+ingress:
+  enabled: true
+  ingressClassName: "nginx"
+  hostname: ""
+  path: /
+  pathType: Prefix
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  tls: true
+  existingSecret: tls-domain
 
 metrics:
   enabled: true
   serviceMonitor:
+    enabled: true
+    interval: 120s
     default:
       enabled: true
     perObject:

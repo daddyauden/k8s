@@ -1,0 +1,26 @@
+alloy:
+  enableReporting: false
+  configMap:
+    content: |-
+      logging {
+        level = "info"
+        format = "logfmt"
+      }
+
+serviceMonitor:
+  enabled: true
+  additionalLabels:
+    release: prometheus
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  path: /
+  pathType: Prefix
+  hosts:
+    - ""
+  tls:
+    - secretName: tls-domain

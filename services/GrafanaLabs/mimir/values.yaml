@@ -1,0 +1,191 @@
+global:
+  extraEnv:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+
+mimir:
+  structuredConfig:
+    common:
+      storage:
+        backend: s3
+        s3:
+          endpoint: ""
+          region: us-east-1
+          access_key_id: beb8a305683f2dafa8750dbf
+          secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
+          http:
+            insecure_skip_verify: false
+    alertmanager_storage:
+      s3:
+        bucket_name: mimir-alertmanager
+    blocks_storage:
+      s3:
+        bucket_name: mimir-tsdb
+    ruler_storage:
+      s3:
+        bucket_name: mimir-ruler
+    memberlist:
+      join_members:
+        - mimir-gossip-ring:7946
+
+runtimeConfig:
+  ingester_limits:
+    max_ingestion_rate: 20000
+    max_series: 1500000
+    max_tenants: 1000
+    max_inflight_push_requests: 30000
+  distributor_limits:
+    max_ingestion_rate: 20000
+    max_inflight_push_requests: 30000
+    max_inflight_push_requests_bytes: 50000000
+  overrides:
+    tenant-1:
+      ingestion_tenant_shard_size: 9
+      max_global_series_per_user: 1500000
+      max_fetched_series_per_query: 100000
+
+alertmanager:
+  enabled: true
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    storageClassName: rook-ceph-block
+  statefulSet:
+    enabled: true
+  zoneAwareReplication:
+    enabled: false
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+distributor:
+  enabled: true
+  replicas: null
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+ingester:
+  enabled: true
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    storageClassName: rook-ceph-block
+  zoneAwareReplication:
+    enabled: false
+  statefulSet:
+    enabled: true
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+overrides_exporter:
+  enabled: true
+  replicas: 1
+
+ruler:
+  enabled: true
+  replicas: 1
+  remoteEvaluationDedicatedQueryPath: false
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
+# ruler_querier:
+#   replicas: 1
+
+# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
+# ruler_query_frontend:
+#   replicas: null
+
+# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
+# ruler_query_scheduler:
+#   replicas: 1
+
+querier:
+  enabled: true
+  replicas: 1
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+query_frontend:
+  enabled: true
+  replicas: null
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+query_scheduler:
+  enabled: true
+  replicas: 1
+
+store_gateway:
+  enabled: true
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    storageClassName: rook-ceph-block
+  zoneAwareReplication:
+    enabled: false
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+compactor:
+  enabled: true
+  replicas: 1
+  persistentVolume:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+    storageClassName: rook-ceph-block
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+chunks-cache:
+  enabled: true
+  replicas: 1
+  allocatedMemory: 256
+
+index-cache:
+  enabled: true
+  replicas: 1
+  allocatedMemory: 128
+
+metadata-cache:
+  enabled: true
+  replicas: 1
+  allocatedMemory: 64
+
+results-cache:
+  enabled: true
+  replicas: 1
+  allocatedMemory: 64
+
+rollout_operator:
+  enabled: true
+
+minio:
+  enabled: false
+
+nginx:
+  enabled: false
+
+gateway:
+  enabled: true
+  enabledNonEnterprise: true
+  replicas: 1
+  readinessProbe:
+    httpGet:
+      path: /ready
+      port: http-metrics
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 10
