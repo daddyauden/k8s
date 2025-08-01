@@ -20,19 +20,20 @@ kubectl apply -f common.yaml
 kubectl apply -f operator.yaml
 
 ##### update placement and storage base on your requirements
-# storage:
-#   useAllNodes: false
-#   useAllDevices: false
-#   nodes:
-#     - name: c1
-#       devices:
-#         - name: "sdc"
-#     - name: c2
-#       devices:
-#         - name: "sdc"
-#     - name: c4
-#       devices:
-#         - name: "sdc"
+storage:
+  useAllNodes: false
+  useAllDevices: false
+  nodes:
+    - name: s1
+      devices:
+        - name: "sda3"
+        - name: "sda4"
+        - name: "sda5"
+    - name: s2
+      devices:
+        - name: "sda3"
+        - name: "sda4"
+        - name: "sda5"
 
 kubectl apply -f cluster.yaml
 

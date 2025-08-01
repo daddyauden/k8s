@@ -15,6 +15,5 @@ sudo kubeadm init --v=10 --pod-network-cidr=$POD_NETWORK_CIDR --service-cidr=$SE
 # kubeadm token create --print-join-command
 
 ###### after add worker node, update label
-# kubectl label node c1 node-role.kubernetes.io/worker=worker
-# kubectl label node c2 node-role.kubernetes.io/worker=worker
-# kubectl label node c4 node-role.kubernetes.io/worker=worker
+# kubectl label node s1 node-role.kubernetes.io/worker=worker
+# kubectl label node s2 node-role.kubernetes.io/worker=worker

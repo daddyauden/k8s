@@ -22,8 +22,3 @@ kubectl delete -f operator.yaml
 kubectl delete -f common.yaml
 kubectl delete -f crds.yaml
 kubectl delete ns $NS
-
-###### delete data in each worker node ######
-# sudo rm -rf /var/lib/rook/*
-# sudo rm -rf /var/lib/ceph/*
-# sudo rm -rf /etc/ceph
