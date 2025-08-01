@@ -8,7 +8,5 @@ kubectl create -f custom-resources.yaml
 
 kubectl get pods -n calico-system
 
-sleep 1m
-
 # fix pod can not conmunicate svc, after remove kube-dns, k8s will recreate it
-kubectl delete pods -n kube-system -l k8s-app=kube-dns
+# kubectl delete pods -n kube-system -l k8s-app=kube-dns
