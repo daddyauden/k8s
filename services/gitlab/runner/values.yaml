@@ -1,0 +1,53 @@
+replicas: 2
+
+revisionHistoryLimit: 10
+
+gitlabUrl: ""
+
+runnerToken: "glrt-MIMuMdlXU92u40NYxYQEyXQ6MQp1OjEH.01.0w0e24atm"
+
+unregisterRunners: true
+
+logLevel: debug
+
+logFormat: runner
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
+
+service:
+  enabled: true
+
+runners:
+  config: |
+    [[runners]]
+      name = "k8s-docker-runner"
+      executor = "kubernetes"
+
+      [runners.kubernetes]
+        namespace = "{{ default .Release.Namespace .Values.runners.jobNamespace }}"
+        image = "docker:dind"
+        privileged = true
+        service_account = "default"
+
+      [[runners.kubernetes.volumes.empty_dir]]
+          name = "docker-certs"
+          mount_path = "/certs/client"
+
+      [runners.cache]
+        Type = "gitlab"
+        Path = "cache"
+        Shared = true
+
+  privileged: true
+  serviceAccountName: gitlab-runner

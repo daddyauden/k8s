@@ -3,7 +3,6 @@ set -e
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
-helm repo update
 
 kubectl apply -f - <<EOF
 apiVersion: v1

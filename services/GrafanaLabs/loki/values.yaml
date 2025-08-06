@@ -1,16 +1,4 @@
-deploymentMode: SingleBinary
-# deploymentMode: SimpleScalable
-
-######################################################################################################################
-#
-# Base Loki Configs including kubernetes configurations and configurations for Loki itself,
-# see below for more specifics on Loki's configuration.
-#
-######################################################################################################################
 loki:
-  readinessProbe:
-    initialDelaySeconds: 90
-    timeoutSeconds: 30
   auth_enabled: false
   schemaConfig:
     configs:
@@ -32,234 +20,24 @@ loki:
     volume_enabled: true
   storage:
     bucketNames:
-      chunks: loki-chunks
-      ruler: loki-ruler
-      admin: loki-admin
-    type: s3
-    s3:
-      s3: null
-      endpoint: ""
-      region: us-east-1
-      secretAccessKey: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
-      accessKeyId: beb8a305683f2dafa8750dbf
-      insecure: false
-      s3ForcePathStyle: true
-      signatureVersion: null
-      http_config: {}
-      backoff_config: {}
-      disable_dualstack: true
-    object_store:
-      type: s3
-      s3:
-        endpoint: ""
-        region: us-east-1
-        access_key_id: beb8a305683f2dafa8750dbf
-        secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
-        insecure: false
+      chunks: chunks
+      ruler: ruler
+      admin: admin
 
-######################################################################################################################
-#
-# Enterprise Loki Configs
-#
-######################################################################################################################
-enterprise:
-  enabled: false
+deploymentMode: SimpleScalable
 
-######################################################################################################################
-#
-# Chart Testing
-#
-######################################################################################################################
+backend:
+  replicas: 2
+read:
+  replicas: 2
+write:
+  replicas: 3
+
+minio:
+  enabled: true
+
 test:
   enabled: false
 
 lokiCanary:
-  enabled: false
-
-######################################################################################################################
-#
-# Service Accounts and Kubernetes RBAC
-#
-######################################################################################################################
-serviceAccount:
-  create: true
-
-rbac:
-  pspEnabled: false
-  sccEnabled: false
-  pspAnnotations: {}
-  namespaced: false
-
-######################################################################################################################
-#
-# Network Policy configuration
-#
-######################################################################################################################
-networkPolicy:
-  enabled: false
-
-######################################################################################################################
-#
-# Global memberlist configuration
-#
-######################################################################################################################
-memberlist:
-  service:
-    publishNotReadyAddresses: false
-    annotations: {}
-
-######################################################################################################################
-#
-# adminAPI configuration, enterprise only.
-#
-######################################################################################################################
-adminApi:
-  replicas: 0
-
-######################################################################################################################
-#
-# Gateway and Ingress
-#
-# By default this chart will deploy a Nginx container to act as a gateway which handles routing of traffic
-# and can also do auth.
-#
-# If you would prefer you can optionally disable this and enable using k8s ingress to do the incoming routing.
-#
-######################################################################################################################
-gateway:
-  enabled: true
-  replicas: 1
-  readinessProbe:
-    initialDelaySeconds: 90
-    timeoutSeconds: 30
-
-enterpriseGateway:
-  replicas: 0
-
-ingress:
-  enabled: false
-
-######################################################################################################################
-#
-# Migration
-#
-######################################################################################################################
-migrate:
-  fromDistributed:
-    enabled: false
-
-######################################################################################################################
-#
-# Single Binary Deployment
-#
-# For small Loki installations up to a few 10's of GB per day, or for testing and development.
-#
-######################################################################################################################
-singleBinary:
-  replicas: 0
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClassName: rook-ceph-block
-
-######################################################################################################################
-#
-# Simple Scalable Deployment (SSD) Mode
-#
-# For small to medium size Loki deployments up to around 1 TB/day, this is the default mode for this helm chart
-#
-######################################################################################################################
-# write:
-#   replicas: 1
-#   persistence:
-#     size: 10Gi
-#     storageClassName: rook-ceph-block
-
-# read:
-#   replicas: 1
-
-# backend:
-#   replicas: 1
-#   persistence:
-#     size: 10Gi
-#     storageClassName: rook-ceph-block
-
-######################################################################################################################
-#
-# Microservices Mode
-#
-# For large Loki deployments ingesting more than 1 TB/day
-#
-######################################################################################################################
-# ingester:
-#   replicas: 0
-#   zoneAwareReplication:
-#     enabled: false
-
-# distributor:
-#   replicas: 0
-
-# querier:
-#   replicas: 0
-
-# queryFrontend:
-#   replicas: 0
-
-# queryScheduler:
-#   replicas: 0
-
-# indexGateway:
-#   replicas: 0
-
-# compactor:
-#   replicas: 0
-
-# bloomGateway:
-#   replicas: 0
-
-# bloomPlanner:
-#   replicas: 0
-
-# bloomBuilder:
-#   replicas: 0
-
-# patternIngester:
-#   replicas: 0
-
-# ruler:
-#   enabled: false
-#   replicas: 0
-
-# overridesExporter:
-#   enabled: false
-#   replicas: 0
-
-# memcached:
-#   enabled: true
-#   readinessProbe:
-#     initialDelaySeconds: 60
-#     periodSeconds: 15
-#     timeoutSeconds: 10
-#     failureThreshold: 10
-
-# memcachedExporter:
-#   enabled: true
-
-# resultsCache:
-#   enabled: true
-#   replicas: 1
-
-# chunksCache:
-#   enabled: true
-#   replicas: 1
-
-######################################################################################################################
-#
-# Subchart configurations
-#
-######################################################################################################################
-rollout_operator:
-  enabled: false
-
-minio:
   enabled: false

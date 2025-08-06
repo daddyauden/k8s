@@ -5,7 +5,6 @@ NS=$MONITORING_NS
 
 helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
 
-helm repo update
 
 kubectl apply -f - <<EOF
 apiVersion: v1

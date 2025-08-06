@@ -10,17 +10,14 @@ pyroscope:
   persistence:
     enabled: true
     size: 10Gi
-    storageClassName: rook-ceph-block
-    accessModes:
-      - ReadWriteOnce
   structuredConfig:
     storage:
       backend: s3
       s3:
         endpoint: ""
         bucket_name: pyroscope-data
-        access_key_id: beb8a305683f2dafa8750dbf
-        secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
+        access_key_id: ead36fa2a638f64ce5c74885
+        secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
         insecure: false
 
 alloy:

@@ -35,7 +35,11 @@ kubectl apply -f operator.yaml
 #         - name: "sda4"
 #         - name: "sda5"
 
-kubectl apply -f cluster.yaml
+## for production
+# kubectl apply -f cluster.yaml
 
-kubectl -n $NS get pods
-kubectl -n $NS get cephcluster
+## for test
+kubectl apply -f cluster-test.yaml
+
+# kubectl -n $NS get pods
+# kubectl -n $NS get cephcluster

@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
+NS=$ARGOCD_NS
+
 helm uninstall argo-cd -n $NS
 
 kubectl get crd --no-headers -o custom-columns=":metadata.name" | grep 'argoproj.io$' | xargs -I {} kubectl delete crd {}

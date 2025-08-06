@@ -3,7 +3,6 @@ set -e
 
 helm repo add jenkins https://charts.jenkins.io
 
-helm repo update
 
 kubectl apply -f - <<EOF
 apiVersion: v1

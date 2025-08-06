@@ -5,7 +5,7 @@ REDIS_PASSWORD=$(kubectl get secret --namespace $NS redis-secrets -o jsonpath="{
 
 echo $REDIS_PASSWORD
 
-kubectl run --namespace $NS redis-client --restart='Never' --env REDIS_PASSWORD=$REDIS_PASSWORD  --image docker.io/bitnami/redis:8.0.2-debian-12-r4 --command -- sleep infinity
+kubectl run --namespace $NS redis-client --restart='Never' --env REDIS_PASSWORD=$REDIS_PASSWORD  --image docker.io/bitnami/redis:8.0.3-debian-12-r1 --command -- sleep infinity
 
 kubectl exec -it redis-client --namespace $NS -- bash
 

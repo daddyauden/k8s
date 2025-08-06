@@ -3,7 +3,6 @@
 
 helm repo add traefik https://traefik.github.io/charts
 
-helm repo update
 
 kubectl apply -f - <<EOF
 apiVersion: v1

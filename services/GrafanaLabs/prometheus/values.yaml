@@ -19,14 +19,9 @@ grafana:
     hosts:
       - ""
     path: /
-    tls:
-      - secretName: tls-domain
   persistence:
     enabled: true
     type: sts
-    storageClassName: rook-ceph-block
-    accessModes:
-      - ReadWriteOnce
     size: 10Gi
     finalizers:
       - kubernetes.io/pvc-protection

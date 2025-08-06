@@ -22,5 +22,5 @@ ingress:
   pathType: Prefix
   hosts:
     - ""
-  tls:
-    - secretName: tls-domain
+  # tls:
+  #   - secretName: tls-domain

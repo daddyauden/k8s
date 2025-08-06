@@ -34,15 +34,6 @@ redis:
     addr: "redis-master:6379"
     existingSecret: "redis-secrets"
 
-exporter:
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
-
 persistence:
   enabled: true
   persistentVolumeClaim:

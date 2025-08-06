@@ -3,8 +3,6 @@ set -e
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 
-helm repo update
-
 kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Namespace
@@ -17,10 +15,6 @@ metadata:
     pod-security.kubernetes.io/enforce-version: v1.31
 EOF
 
-# secret should be set the same namespace with ingress
-kubectl create secret tls tls-domain --namespace=$NS --cert=pem/tls.crt --key=pem/tls.key
+helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.13.0 --namespace ingress-nginx --create-namespace -f values.yaml
 
-helm install ingress-nginx ingress-nginx/ingress-nginx --version 4.12.3 --namespace ingress-nginx --create-namespace -f values.yaml
-
-# after update values.yaml, run it
-# helm upgrade ingress-nginx ingress-nginx/ingress-nginx --install --namespace ingress-nginx --create-namespace -f values.yaml
+# helm upgrade ingress-nginx ingress-nginx/ingress-nginx --install --namespace ingress-nginx --create-namespace -f values.yaml --set controller.config.use-forwarded-headers="true" --set controller.config.enable-real-ip="true"

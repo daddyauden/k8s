@@ -55,17 +55,12 @@ master:
 # architecture: replication
 # replica:
 #   replicaCount: 3
+#   disableCommands:
+#     - FLUSHDB
 #   persistence:
 #     enabled: true
 #     storageClass: rook-ceph-block
 #     size: 5Gi
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 128Mi
-#     limits:
-#       cpu: 200m
-#       memory: 256Mi
 #   terminationGracePeriodSeconds: 60
 #   startupProbe:
 #     enabled: true
@@ -95,13 +90,10 @@ master:
 #   quorum: 2
 #   replicas: 3
 #   terminationGracePeriodSeconds: 60
-#   resources:
-#     requests:
-#       cpu: 100m
-#       memory: 128Mi
-#     limits:
-#       cpu: 100m
-#       memory: 256Mi
+#   persistence:
+#     enabled: true
+#     storageClass: rook-ceph-block
+#     size: 100Mi
 #   startupProbe:
 #     enabled: true
 #     initialDelaySeconds: 60

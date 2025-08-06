@@ -1,8 +1,10 @@
 #!/usr/bin/env sh
 set -e
 
-ACCESS_KEY=$(openssl rand -hex 12)
-SECRET_KEY=$(openssl rand -hex 32)
+# ACCESS_KEY=$(openssl rand -hex 12)
+# SECRET_KEY=$(openssl rand -hex 32)
+ACCESS_KEY=ead36fa2a638f64ce5c74885
+SECRET_KEY=5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
 
 export ROOT_USER=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.accesskey}" | base64 -d)
 export ROOT_PASSWORD=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.secretkey}" | base64 -d)
@@ -12,4 +14,4 @@ kubectl run --namespace $NS minio-client \
      --env MINIO_SERVER_ROOT_USER=$ROOT_USER \
      --env MINIO_SERVER_ROOT_PASSWORD=$ROOT_PASSWORD \
      --env MINIO_SERVER_HOST=minio \
-     --image docker.io/bitnami/minio-client:2025.5.21-debian-12-r6 -- mc admin info
+     --image docker.io/bitnami/minio-client:2025.7.21-debian-12-r0 -- mc admin info

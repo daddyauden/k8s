@@ -16,14 +16,6 @@ auth:
 
 mode: standalone
 
-resources:
-  requests:
-    cpu: 400m
-    memory: 400Mi
-  limits:
-    cpu: 800m
-    memory: 800Mi
-
 startupProbe:
   enabled: true
   initialDelaySeconds: 60
@@ -89,13 +81,6 @@ console:
     timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 3
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
   ingress:
     enabled: true
     ingressClassName: "nginx"

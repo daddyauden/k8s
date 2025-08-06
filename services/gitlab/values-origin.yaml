@@ -51,7 +51,7 @@ global:
   edition: ee
 
   ## https://docs.gitlab.com/charts/charts/globals#gitlab-version
-  gitlabVersion: "18.1.1"
+  gitlabVersion: "18.2.1"
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
@@ -509,10 +509,12 @@ global:
       database:
         skipSequenceAlteration: false
       topologyServiceClient:
-      # address:
-      # caFile:
-      # privateKeyFile:
-      # certificateFile:
+        tls:
+          enabled: false
+        # address:
+        # caFile:
+        # privateKeyFile:
+        # certificateFile:
 
     ## https://docs.gitlab.com/charts/charts/globals#suggested-reviewers-settings
     suggested_reviewers: {}
@@ -983,6 +985,14 @@ nginx-ingress: &nginx-ingress
   enabled: true
   tcpExternalConfig: "true"
   controller: &nginx-ingress-controller
+    podSecurityContext:
+      seccompProfile:
+        type: "RuntimeDefault"
+    image:
+      registry: registry.gitlab.com
+      image: gitlab-org/cloud-native/mirror/images/ingress-nginx/controller
+      tag: "v1.11.7"
+      digest: "sha256:016a25cf89bf7f930869ccd7cb3dd4acbe106cd4da1419804951ef9c8636f053"
     addHeaders:
       Referrer-Policy: strict-origin-when-cross-origin
     config: &nginx-ingress-controller-config
@@ -1003,6 +1013,12 @@ nginx-ingress: &nginx-ingress
 
     service:
       externalTrafficPolicy: "Local"
+      # Configure no IP families to delegate assignment to controller based on cluster config.
+      ipFamilies: []
+      ipFamilyPolicy: "PreferDualStack"
+      appProtocol: false
+      internal:
+        appProtocol: false
     ingressClassByName: false
     ingressClassResource:
       name: '{{ include "ingress.class.name" $ | quote }}'
@@ -1027,6 +1043,9 @@ nginx-ingress: &nginx-ingress
     admissionWebhooks:
       enabled: false
   defaultBackend:
+    podSecurityContext:
+      seccompProfile:
+        type: "RuntimeDefault"
     resources:
       requests:
         cpu: 5m

@@ -3,6 +3,11 @@ controller:
   progressDeadlineSeconds: 300
   extraArgs:
     enable-ssl-passthrough: "true"
+    default-ssl-certificate: "default/tls-domain"
+  config:
+    use-forwarded-headers: "true"
+    enable-real-ip: "true"
+    forwarded-for-header: "X-Forwarded-For"
   service:
     type: NodePort
     nodePorts:

@@ -4,3 +4,5 @@ set -e
 NS=$MONITORING_NS
 
 helm uninstall tempo -n $NS
+
+kubectl get pvc -n $NS --no-headers -o custom-columns=":metadata.name" | grep '^storage-tempo' | xargs -I {} kubectl -n $NS delete pvc {}

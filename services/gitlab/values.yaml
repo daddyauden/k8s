@@ -12,7 +12,7 @@ global:
     provider: "nginx"
     tls:
       enabled: true
-      secretName: tls-domain
+      # secretName: tls-domain
     path: "/"
     pathType: Prefix
     annotations:
@@ -245,9 +245,6 @@ gitlab:
       - "20.20.0.0/16"
       - "30.30.0.0/16"
       - "192.168.1.0/24"
-    ingress:
-      tls:
-        secretName: tls-domain
   gitlab-exporter:
     enabled: true
     metrics:
@@ -256,9 +253,6 @@ gitlab:
         enabled: true
         additionalLabels:
           release: prometheus
-
-certmanager:
-  install: false
 
 installCertmanager: false
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-NS=prod-mock
+NS=$MONITORING_NS
 
 helm uninstall mimir -n $NS
 

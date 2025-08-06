@@ -13,8 +13,8 @@ mimir:
         s3:
           endpoint: ""
           region: us-east-1
-          access_key_id: beb8a305683f2dafa8750dbf
-          secret_access_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
+          access_key_id: ead36fa2a638f64ce5c74885
+          secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
           http:
             insecure_skip_verify: false
     alertmanager_storage:
@@ -28,7 +28,7 @@ mimir:
         bucket_name: mimir-ruler
     memberlist:
       join_members:
-        - mimir-gossip-ring:7946
+        - dns+{{ include "mimir.fullname" . }}-gossip-ring.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ include "mimir.memberlistBindPort" . }}
 
 runtimeConfig:
   ingester_limits:
@@ -51,10 +51,7 @@ alertmanager:
   replicas: 1
   persistentVolume:
     enabled: true
-    accessModes:
-      - ReadWriteOnce
     size: 1Gi
-    storageClassName: rook-ceph-block
   statefulSet:
     enabled: true
   zoneAwareReplication:
@@ -73,10 +70,7 @@ ingester:
   replicas: 1
   persistentVolume:
     enabled: true
-    accessModes:
-      - ReadWriteOnce
     size: 2Gi
-    storageClassName: rook-ceph-block
   zoneAwareReplication:
     enabled: false
   statefulSet:
@@ -128,10 +122,7 @@ store_gateway:
   replicas: 1
   persistentVolume:
     enabled: true
-    accessModes:
-      - ReadWriteOnce
     size: 2Gi
-    storageClassName: rook-ceph-block
   zoneAwareReplication:
     enabled: false
   extraArgs:
@@ -142,32 +133,25 @@ compactor:
   replicas: 1
   persistentVolume:
     enabled: true
-    accessModes:
-      - ReadWriteOnce
     size: 2Gi
-    storageClassName: rook-ceph-block
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
 chunks-cache:
   enabled: true
   replicas: 1
-  allocatedMemory: 256
 
 index-cache:
   enabled: true
   replicas: 1
-  allocatedMemory: 128
 
 metadata-cache:
   enabled: true
   replicas: 1
-  allocatedMemory: 64
 
 results-cache:
   enabled: true
   replicas: 1
-  allocatedMemory: 64
 
 rollout_operator:
   enabled: true

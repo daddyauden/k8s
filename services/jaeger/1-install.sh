@@ -3,7 +3,6 @@ set -e
 
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 
-helm repo update
 
 kubectl apply -f - <<EOF
 apiVersion: v1

@@ -3,22 +3,14 @@ replicas: 1
 tempo:
   reportingEnabled: false
   multitenancyEnabled: false
-  storage:
-    trace:
-      backend: s3
-      s3:
-        bucket: tempo-trace
-        endpoint: ""
-        access_key: beb8a305683f2dafa8750dbf
-        secret_key: e177a5d8adf6b5e3522b9d2893d340b093661cdf6f33763318fd47b48f3ba96e
-        insecure: false
 
-tempoQuery:
-  enabled: false
+serviceMonitor:
+  enabled: true
+  interval: "120s"
+  additionalLabels:
+    release: prometheus
+  scrapeTimeout: 10s
 
 persistence:
   enabled: true
-  storageClassName: rook-ceph-block
-  accessModes:
-    - ReadWriteOnce
   size: 10Gi
