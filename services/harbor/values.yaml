@@ -1,5 +1,10 @@
 externalURL: ""
 
+core:
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+
 expose:
   type: ingress
   tls:
@@ -22,7 +27,7 @@ existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
 database:
   type: external
   external:
-    host: "postgresql"
+    host: "postgresql-primary"
     port: "5432"
     username: "harbor"
     coreDatabase: "harbor"
@@ -43,8 +48,10 @@ persistence:
     jobservice:
       jobLog:
         storageClass: "rook-ceph-block"
+        size: 1Gi
     trivy:
       storageClass: "rook-ceph-block"
+      size: 5Gi
 
 metrics:
   enabled: true

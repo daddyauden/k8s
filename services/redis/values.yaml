@@ -18,15 +18,7 @@ master:
   count: 1
   persistence:
     enabled: true
-    storageClass: rook-ceph-block
     size: 5Gi
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 200m
-      memory: 256Mi
   disableCommands:
     - FLUSHDB
   terminationGracePeriodSeconds: 60
@@ -115,13 +107,6 @@ master:
 
 volumePermissions:
   enabled: true
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
 
 metrics:
   enabled: true
@@ -150,10 +135,3 @@ metrics:
     timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 3
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi

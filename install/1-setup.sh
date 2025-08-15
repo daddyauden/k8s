@@ -26,6 +26,8 @@ EOF
 
 sudo sysctl --system
 
+sudo timedatectl set-timezone UTC
+
 sudo apt-get update
 sudo apt-get install -y containerd
 sudo mkdir -p /etc/containerd

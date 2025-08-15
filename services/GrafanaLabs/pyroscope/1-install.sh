@@ -12,6 +12,6 @@ metadata:
   name: $NS
 EOF
 
-helm install pyroscope grafana/pyroscope --version 1.14.1 --namespace $NS --create-namespace -f values.yaml --set pyroscope.structuredConfig.storage.s3.endpoint="s3.$DOMAIN"
+helm install pyroscope grafana/pyroscope --version 1.14.1 --namespace $NS --create-namespace -f values.yaml
 
-# helm upgrade pyroscope grafana/pyroscope --install --namespace $NS --create-namespace -f values.yaml
+# helm upgrade pyroscope grafana/pyroscope --install --namespace $MONITORING_NS --create-namespace -f values.yaml

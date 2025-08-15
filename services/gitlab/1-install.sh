@@ -27,7 +27,7 @@ stringData:
     path_style: true
 EOF
 
-helm install gitlab gitlab/gitlab --version 9.2.1 --namespace $NS --create-namespace -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
+helm install gitlab gitlab/gitlab --version 9.2.2 --namespace $NS --create-namespace -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
 
 # after update values.yaml, run it
 # helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"

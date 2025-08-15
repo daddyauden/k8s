@@ -14,4 +14,4 @@ EOF
 
 helm install tempo grafana/tempo --version 1.23.2 --namespace $NS --create-namespace -f values.yaml
 
-# helm upgrade tempo grafana/tempo --install --namespace $NS --create-namespace -f values.yaml
+# helm upgrade tempo grafana/tempo --install --namespace $MONITORING_NS --create-namespace -f values.yaml

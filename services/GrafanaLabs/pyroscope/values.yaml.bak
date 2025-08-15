@@ -1,0 +1,36 @@
+pyroscope:
+  extraEnvVars:
+    - name: POD_IP
+      valueFrom:
+        fieldRef:
+          fieldPath: status.podIP
+  replicaCount: 3
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+  persistence:
+    enabled: true
+    size: 10Gi
+  structuredConfig:
+    storage:
+      backend: s3
+      s3:
+        endpoint: ""
+        bucket_name: pyroscope-data
+        access_key_id: ead36fa2a638f64ce5c74885
+        secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
+        insecure: false
+
+alloy:
+  enabled: false
+
+agent:
+  enabled: false
+
+minio:
+  enabled: false
+
+ingress:
+  enabled: false
+
+serviceMonitor:
+  enabled: false

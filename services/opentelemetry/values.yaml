@@ -163,8 +163,6 @@ ingress:
       - path: /
         pathType: Prefix
         port: 4318
-  tls:
-    - secretName: tls-domain
 
 serviceMonitor:
   enabled: true

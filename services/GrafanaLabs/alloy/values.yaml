@@ -1,16 +1,75 @@
 alloy:
   enableReporting: false
+  extraPorts:
+    - name: otlp-http
+      port: 4318
+      targetPort: 4318
+      protocol: TCP
+    - name: otlp-grpc
+      port: 4317
+      targetPort: 4317
+      protocol: TCP
   configMap:
     content: |-
       logging {
-        level = "info"
+        level = "debug"
         format = "logfmt"
+      }
+
+      otelcol.receiver.otlp "default" {
+        grpc {
+          endpoint = "0.0.0.0:4317"
+        }
+        
+        http {
+          endpoint = "0.0.0.0:4318"
+        }
+        
+        output {
+          metrics = [otelcol.exporter.prometheus.default.input]
+          logs    = [otelcol.exporter.loki.default.input]
+          traces  = [otelcol.exporter.otlp.default.input]
+        }
+      }
+
+      otelcol.exporter.prometheus "default" {
+        forward_to = [prometheus.remote_write.mimir.receiver]
+      }
+
+      prometheus.remote_write "mimir" {
+        endpoint {
+          url = "http://mimir-gateway/api/v1/push"
+        }
+      }
+
+      otelcol.exporter.loki "default" {
+        forward_to = [loki.write.default.receiver]
+      }
+
+      loki.write "default" {
+        endpoint {
+          url = "http://loki-gateway/loki/api/v1/push"
+        }
+      }
+
+      otelcol.exporter.otlp "default" {
+        client {
+          endpoint = "http://tempo:4317"
+          tls {
+              insecure             = true
+              insecure_skip_verify = true
+          }
+        }
       }
 
 serviceMonitor:
   enabled: true
   additionalLabels:
     release: prometheus
+
+controller:
+  type: "statefulset"
+  replicas: 3
 
 ingress:
   enabled: true
@@ -22,5 +81,3 @@ ingress:
   pathType: Prefix
   hosts:
     - ""
-  # tls:
-  #   - secretName: tls-domain

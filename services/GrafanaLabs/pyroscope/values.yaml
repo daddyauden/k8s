@@ -1,24 +1,39 @@
 pyroscope:
-  replicaCount: 1
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
   extraEnvVars:
     - name: POD_IP
       valueFrom:
         fieldRef:
           fieldPath: status.podIP
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+  replicaCount: 1
   persistence:
     enabled: true
     size: 10Gi
-  structuredConfig:
-    storage:
-      backend: s3
-      s3:
-        endpoint: ""
-        bucket_name: pyroscope-data
-        access_key_id: ead36fa2a638f64ce5c74885
-        secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
-        insecure: false
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    failureThreshold: 10
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 10
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 10
+    failureThreshold: 10
+  # structuredConfig:
+  #   storage:
+  #     backend: s3
+  #     s3:
+  #       endpoint: ""
+  #       bucket_name: pyroscope-data
+  #       access_key_id:
+  #       secret_access_key:
+  #       insecure: false
 
 alloy:
   enabled: false
@@ -27,7 +42,10 @@ agent:
   enabled: false
 
 minio:
-  enabled: false
+  enabled: true
+  serviceAccount:
+    create: true
+    name: pyroscope-minio-sa
 
 ingress:
   enabled: false

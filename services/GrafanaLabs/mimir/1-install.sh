@@ -14,4 +14,4 @@ EOF
 
 helm install mimir grafana/mimir-distributed --version 5.7.0 --namespace $NS --create-namespace -f values.yaml --set mimir.structuredConfig.common.storage.s3.endpoint="s3.$DOMAIN"
 
-# helm upgrade mimir grafana/mimir-distributed --install --namespace $NS --create-namespace -f values.yaml --set mimir.structuredConfig.common.storage.s3.endpoint="s3.$DOMAIN"
+# helm upgrade mimir grafana/mimir-distributed --install --namespace $MONITORING_NS --create-namespace -f values.yaml --set mimir.structuredConfig.common.storage.s3.endpoint="s3.$DOMAIN"

@@ -1,3 +1,5 @@
+deploymentMode: SimpleScalable
+
 loki:
   auth_enabled: false
   schemaConfig:
@@ -24,8 +26,6 @@ loki:
       ruler: ruler
       admin: admin
 
-deploymentMode: SimpleScalable
-
 backend:
   replicas: 2
 read:
@@ -41,3 +41,8 @@ test:
 
 lokiCanary:
   enabled: false
+
+gateway:
+  enabled: true
+  nginxConfig:
+    clientMaxBodySize: 10G

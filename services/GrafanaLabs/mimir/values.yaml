@@ -15,127 +15,99 @@ mimir:
           region: us-east-1
           access_key_id: ead36fa2a638f64ce5c74885
           secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
+          bucket_name: mimir
           http:
-            insecure_skip_verify: false
-    alertmanager_storage:
-      s3:
-        bucket_name: mimir-alertmanager
+            insecure_skip_verify: true
     blocks_storage:
       s3:
         bucket_name: mimir-blocks
+    alertmanager_storage:
+      s3:
+        bucket_name: mimir-alertmanager
     ruler_storage:
       s3:
         bucket_name: mimir-ruler
     memberlist:
-      join_members:
-        - dns+{{ include "mimir.fullname" . }}-gossip-ring.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}:{{ include "mimir.memberlistBindPort" . }}
-
-runtimeConfig:
-  ingester_limits:
-    max_ingestion_rate: 20000
-    max_series: 1500000
-    max_tenants: 1000
-    max_inflight_push_requests: 30000
-  distributor_limits:
-    max_ingestion_rate: 20000
-    max_inflight_push_requests: 30000
-    max_inflight_push_requests_bytes: 50000000
-  overrides:
-    tenant-1:
-      ingestion_tenant_shard_size: 9
-      max_global_series_per_user: 1500000
-      max_fetched_series_per_query: 100000
+      cluster_label: "{{.Release.Name}}-{{.Release.Namespace}}"
 
 alertmanager:
-  enabled: true
-  replicas: 1
   persistentVolume:
     enabled: true
-    size: 1Gi
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 1.4Gi
+  #   requests:
+  #     cpu: 1
+  #     memory: 1Gi
   statefulSet:
     enabled: true
-  zoneAwareReplication:
-    enabled: false
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-distributor:
-  enabled: true
-  replicas: null
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-ingester:
-  enabled: true
-  replicas: 1
-  persistentVolume:
-    enabled: true
-    size: 2Gi
-  zoneAwareReplication:
-    enabled: false
-  statefulSet:
-    enabled: true
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-overrides_exporter:
-  enabled: true
-  replicas: 1
-
-ruler:
-  enabled: true
-  replicas: 1
-  remoteEvaluationDedicatedQueryPath: false
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
-# ruler_querier:
-#   replicas: 1
-
-# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
-# ruler_query_frontend:
-#   replicas: null
-
-# -- Only deployed if ruler.remoteEvaluationDedicatedQueryPath
-# ruler_query_scheduler:
-#   replicas: 1
-
-querier:
-  enabled: true
-  replicas: 1
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-query_frontend:
-  enabled: true
-  replicas: null
-  extraArgs:
-    memberlist.advertise-addr: $(POD_IP)
-
-query_scheduler:
-  enabled: true
-  replicas: 1
-
-store_gateway:
-  enabled: true
-  replicas: 1
-  persistentVolume:
-    enabled: true
-    size: 2Gi
   zoneAwareReplication:
     enabled: false
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
 compactor:
-  enabled: true
-  replicas: 1
   persistentVolume:
-    enabled: true
-    size: 2Gi
+    size: 10Gi
+  # resources:
+  #   limits:
+  #     memory: 2.1Gi
+  #   requests:
+  #     cpu: 1
+  #     memory: 1.5Gi
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
+
+distributor:
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 5.7Gi
+  #   requests:
+  #     cpu: 2
+  #     memory: 4Gi
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+ingester:
+  persistentVolume:
+    size: 10Gi
+  replicas: 2
+  # resources:
+  #   limits:
+  #     memory: 12Gi
+  #   requests:
+  #     cpu: 3.5
+  #     memory: 8Gi
+  topologySpreadConstraints: {}
+  # affinity:
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: target # support for enterprise.legacyLabels
+  #               operator: In
+  #               values:
+  #                 - ingester
+  #         topologyKey: 'kubernetes.io/hostname'
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: app.kubernetes.io/component
+  #               operator: In
+  #               values:
+  #                 - ingester
+  #         topologyKey: 'kubernetes.io/hostname'
+  zoneAwareReplication:
+    enabled: false
+  statefulSet:
+    enabled: true
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+admin-cache:
+  enabled: true
+  replicas: 1
 
 chunks-cache:
   enabled: true
@@ -153,23 +125,109 @@ results-cache:
   enabled: true
   replicas: 1
 
-rollout_operator:
-  enabled: true
-
 minio:
   enabled: false
 
+overrides_exporter:
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
+querier:
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 5.6Gi
+  #   requests:
+  #     cpu: 2
+  #     memory: 4Gi
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+query_frontend:
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 2.8Gi
+  #   requests:
+  #     cpu: 2
+  #     memory: 2Gi
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+query_scheduler:
+  enabled: true
+  replicas: 1
+
+ruler:
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 2.8Gi
+  #   requests:
+  #     cpu: 1
+  #     memory: 2Gi
+  remoteEvaluationDedicatedQueryPath: false
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
+store_gateway:
+  persistentVolume:
+    size: 10Gi
+  replicas: 1
+  # resources:
+  #   limits:
+  #     memory: 2.1Gi
+  #   requests:
+  #     cpu: 1
+  #     memory: 1.5Gi
+  topologySpreadConstraints: {}
+  # affinity:
+  #   podAntiAffinity:
+  #     requiredDuringSchedulingIgnoredDuringExecution:
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: target # support for enterprise.legacyLabels
+  #               operator: In
+  #               values:
+  #                 - store-gateway
+  #         topologyKey: 'kubernetes.io/hostname'
+
+  #       - labelSelector:
+  #           matchExpressions:
+  #             - key: app.kubernetes.io/component
+  #               operator: In
+  #               values:
+  #                 - store-gateway
+  #         topologyKey: 'kubernetes.io/hostname'
+  zoneAwareReplication:
+    enabled: false
+  extraArgs:
+    memberlist.advertise-addr: $(POD_IP)
+
 nginx:
   enabled: false
+  # resources:
+  #   limits:
+  #     memory: 731Mi
+  #   requests:
+  #     cpu: 1
+  #     memory: 512Mi
 
 gateway:
   enabled: true
   enabledNonEnterprise: true
   replicas: 1
-  readinessProbe:
-    httpGet:
-      path: /ready
-      port: http-metrics
-    initialDelaySeconds: 60
-    periodSeconds: 10
-    timeoutSeconds: 10
+  nginx:
+    config:
+      clientMaxBodySize: 10G
+  # resources:
+  #   limits:
+  #     memory: 731Mi
+  #   requests:
+  #     cpu: 1
+  #     memory: 512Mi

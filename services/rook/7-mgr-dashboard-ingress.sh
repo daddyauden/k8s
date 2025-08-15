@@ -1,10 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-# kubectl get secret tls-domain -n $NS -o yaml \
-# | sed "s/namespace: $NS/namespace: rook-ceph/" \
-# | kubectl apply -n rook-ceph -f -
-
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16,8 +12,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: "nginx"
-  tls:
-    - secretName: tls-domain
   rules:
     - host: "rook-ceph.${DOMAIN}"
       http:

@@ -48,7 +48,6 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   tls: true
-  existingSecret: tls-domain
 
 metrics:
   enabled: true

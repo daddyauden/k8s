@@ -1,0 +1,57 @@
+crds:
+  keep: false
+
+controller:
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus
+  logging:
+    level: debug
+
+server:
+  logging:
+    level: debug
+  authModes:
+    - sso
+  sso:
+    enabled: true
+    issuer: ""
+    clientId:
+      name: argo-server-sso
+      key: client-id
+    clientSecret:
+      name: argo-server-sso
+      key: client-secret
+    redirectUrl: ""
+    scopes:
+      - openid
+      - email
+      - groups
+      - profile
+    insecureSkipVerify: true
+    sessionExpiry: 240h
+    rbac:
+      enabled: true
+      policy: |
+        g, marchehub:DevOps, role:admin
+        p, role:admin, *, *, allow
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hosts:
+      - ""
+
+artifactRepository:
+  archiveLogs: true
+  s3:
+    accessKeySecret:
+      name: "argo-workflows-minio"
+      key: accesskey
+    secretKeySecret:
+      name: "argo-workflows-minio"
+      key: secretkey
+    insecure: false
+    bucket: argo-workflows
+    endpoint: ""
+    region: us-east-1

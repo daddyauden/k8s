@@ -14,4 +14,4 @@ EOF
 
 helm install loki grafana/loki --version 6.34.0 --namespace $NS --create-namespace -f values.yaml
 
-# helm upgrade loki grafana/loki --install --namespace $NS --create-namespace -f values.yaml
+# helm upgrade loki grafana/loki --install --namespace $MONITORING_NS --create-namespace -f values.yaml

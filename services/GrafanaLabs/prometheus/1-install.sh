@@ -14,4 +14,4 @@ EOF
 
 helm install prometheus prometheus-community/kube-prometheus-stack --version 75.15.1 --namespace $NS --create-namespace -f values.yaml --set grafana.ingress.hosts[0]="grafana.$DOMAIN"
 
-# helm upgrade prometheus prometheus-community/kube-prometheus-stack --install --namespace $NS --create-namespace -f values.yaml --set grafana.ingress.hosts[0]="grafana.$DOMAIN"
+# helm upgrade prometheus prometheus-community/kube-prometheus-stack --install --namespace $MONITORING_NS --create-namespace -f values.yaml --set grafana.ingress.hosts[0]="grafana.$DOMAIN"

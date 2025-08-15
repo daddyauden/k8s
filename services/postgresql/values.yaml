@@ -9,14 +9,11 @@ global:
         userPasswordKey: gitlab-password
         replicationPasswordKey: replication-password
 
-architecture: standalone
-
-shmVolume:
-  enabled: true
-  sizeLimit: 1Gi
+# architecture: standalone
 
 primary:
   name: primary
+  resourcesPreset: "small"
   startupProbe:
     enabled: true
     initialDelaySeconds: 90
@@ -38,68 +35,68 @@ primary:
     timeoutSeconds: 10
     failureThreshold: 3
     successThreshold: 1
-  resources:
-    requests:
-      cpu: 300m
-      memory: 256Mi
-    limits:
-      cpu: 600m
-      memory: 512Mi
+  # resources:
+  #   requests:
+  #     cpu: 600m
+  #     memory: 512Mi
+  #   limits:
+  #     cpu: 1
+  #     memory: 1Gi
   persistence:
     enabled: true
-    storageClass: rook-ceph-block
     size: 20Gi
 
-# architecture: replication
+architecture: replication
 
-# replication:
-#   synchronousCommit: "remote_apply"
+replication:
+  synchronousCommit: "remote_apply"
 
-# readReplicas:
-#   name: secondary
-#   replicaCount: 2
-#   startupProbe:
-#     enabled: true
-#     initialDelaySeconds: 120
-#     periodSeconds: 30
-#     timeoutSeconds: 10
-#     failureThreshold: 30
-#     successThreshold: 1
-#   livenessProbe:
-#     enabled: true
-#     initialDelaySeconds: 160
-#     periodSeconds: 15
-#     timeoutSeconds: 10
-#     failureThreshold: 3
-#     successThreshold: 1
-#   readinessProbe:
-#     enabled: true
-#     initialDelaySeconds: 40
-#     periodSeconds: 10
-#     timeoutSeconds: 10
-#     failureThreshold: 3
-#     successThreshold: 1
-#   resources:
-#     requests:
-#       cpu: 300m
-#       memory: 256Mi
-#     limits:
-#       cpu: 600m
-#       memory: 512Mi
-#   persistence:
-#     enabled: true
-#     storageClass: rook-ceph-block
-#     size: 20Gi
+readReplicas:
+  name: secondary
+  replicaCount: 2
+  resourcesPreset: "small"
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    timeoutSeconds: 10
+    failureThreshold: 30
+    successThreshold: 1
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 160
+    periodSeconds: 15
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 40
+    periodSeconds: 10
+    timeoutSeconds: 10
+    failureThreshold: 3
+    successThreshold: 1
+  # resources:
+  #   requests:
+  #     cpu: 300m
+  #     memory: 256Mi
+  #   limits:
+  #     cpu: 600m
+  #     memory: 512Mi
+  persistence:
+    enabled: true
+    size: 20Gi
 
 volumePermissions:
   enabled: true
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
+  resourcesPreset: "small"
+  # resources:
+  #   requests:
+  #     cpu: 500m
+  #     memory: 512Mi
+  #   limits:
+  #     cpu: 1
+  #     memory: 1Gi
 
 metrics:
   enabled: true
@@ -129,10 +126,10 @@ metrics:
     timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 3
-  resources:
-    requests:
-      cpu: 50m
-      memory: 64Mi
-    limits:
-      cpu: 100m
-      memory: 128Mi
+  # resources:
+  #   requests:
+  #     cpu: 200m
+  #     memory: 128Mi
+  #   limits:
+  #     cpu: 400m
+  #     memory: 256Mi

@@ -15,11 +15,11 @@ kubectl exec -it redis-client --namespace $NS -- bash
 
 # Auth
 # Read only operations
-# REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis -p 6379
+# REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-master -p 6379
 
 
 # # Sentinel access
-# REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis -p 26379
+# REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-master -p 26379
 
 # after login redis, commands for debug
 # sentinel get-master-addr-by-name mymaster

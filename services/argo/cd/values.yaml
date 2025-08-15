@@ -1,6 +1,17 @@
+crds:
+  keep: false
+
 global:
   domain: ""
   addPrometheusAnnotations: true
+  logging:
+    level: debug
+  env:
+    - name: ARGO_WORKFLOWS_SSO_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: argo-server-sso
+          key: client-secret
 
 controller:
   readinessProbe:
@@ -13,6 +24,58 @@ controller:
     initialDelaySeconds: 90
     periodSeconds: 10
     failureThreshold: 10
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: prometheus
+
+configs:
+  cm:
+    statusbadge.enabled: true
+    dex.config: |
+      connectors:
+        # GitHub example
+        - type: github
+          id: github
+          name: GitHub
+          config:
+            clientID: Ov23liOTJv1jQVluNUhY
+            clientSecret: 4321ce4fd8737cba50c731314b03022c1857abe8
+            orgs:
+              - name: marchehub
+            scopes:
+              - read:org
+
+      staticClients:
+        # This is the OIDC client ID in plaintext should be same with client-id in workflows
+        - id: argo-workflows
+          name: Argo Workflow
+          redirectURIs:
+            - https://argoworkflows.{{ .Values.domain }}.com/oauth2/callback
+          secretEnv: ARGO_WORKFLOWS_SSO_CLIENT_SECRET
+
+dex:
+  enabled: true
+  startupProbe:
+    enabled: true
+    initialDelaySeconds: 90
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 120
+    periodSeconds: 30
+    failureThreshold: 20
+    timeoutSeconds: 30
   metrics:
     enabled: true
     serviceMonitor:
@@ -56,8 +119,6 @@ server:
     path: /
     pathType: Prefix
     tls: false
-    # extraTls:
-    #   - secretName: tls-domain
 
 repoServer:
   replicas: 1
@@ -149,33 +210,6 @@ notifications:
     initialDelaySeconds: 90
     periodSeconds: 10
     failureThreshold: 10
-  metrics:
-    enabled: true
-    serviceMonitor:
-      enabled: true
-      additionalLabels:
-        release: prometheus
-
-dex:
-  enabled: false
-  startupProbe:
-    enabled: true
-    initialDelaySeconds: 90
-    periodSeconds: 30
-    failureThreshold: 20
-    timeoutSeconds: 30
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 120
-    periodSeconds: 30
-    failureThreshold: 20
-    timeoutSeconds: 30
-  livenessProbe:
-    enabled: true
-    initialDelaySeconds: 120
-    periodSeconds: 30
-    failureThreshold: 20
-    timeoutSeconds: 30
   metrics:
     enabled: true
     serviceMonitor:

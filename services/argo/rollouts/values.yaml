@@ -1,0 +1,22 @@
+keepCRDs: false
+
+controller:
+  logging:
+    level: debug
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: prometheus
+
+dashboard:
+  enabled: true
+  logging:
+    level: debug
+  ingress:
+    enabled: true
+    ingressClassName: "nginx"
+    hosts:
+      - ""

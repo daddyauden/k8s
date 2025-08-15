@@ -1,7 +1,6 @@
 global:
   time_zone: UTC
   edition: ce
-  gitlabVersion: "18.1.1"
   storageClass: "rook-ceph-block"
   ingress:
     enabled: true
@@ -12,7 +11,7 @@ global:
     provider: "nginx"
     tls:
       enabled: true
-      # secretName: tls-domain
+      secretName: tls-domain
     path: "/"
     pathType: Prefix
     annotations:
@@ -33,7 +32,7 @@ global:
     bootsnap:
       enabled: false
   psql:
-    host: postgresql
+    serviceName: postgresql-primary
     port: 5432
     username: gitlab
     password:
@@ -41,7 +40,8 @@ global:
       secret: postgres-secrets
       key: gitlab-password
     database: gitlabhq_production
-    connectTimeout: 60
+    connectTimeout: 120
+    preparedStatements: true
   redis:
     host: redis-master
     port: 6379

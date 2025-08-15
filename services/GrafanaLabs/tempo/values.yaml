@@ -3,6 +3,14 @@ replicas: 1
 tempo:
   reportingEnabled: false
   multitenancyEnabled: false
+  metricsGenerator:
+    enabled: true
+    remoteWriteUrl: http://prometheus-operated:9090/api/v1/write
+  overrides:
+    defaults:
+      metrics_generator:
+        processors: [service-graphs, span-metrics, local-blocks]
+        generate_native_histograms: both
 
 serviceMonitor:
   enabled: true
