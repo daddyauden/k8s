@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 set -e
 
-helm uninstall gitlab-runner -n $NS
+helm uninstall gitlab-runner

@@ -5,17 +5,9 @@ helm repo add gitlab http://charts.gitlab.io/
 
 kubectl apply -f - <<EOF
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: $NS
-EOF
-
-kubectl apply -f - <<EOF
-apiVersion: v1
 kind: Secret
 metadata:
   name: gitlab-object-storage
-  namespace: $NS
 type: Opaque
 stringData:
   connection: |
@@ -27,7 +19,7 @@ stringData:
     path_style: true
 EOF
 
-helm install gitlab gitlab/gitlab --version 9.2.2 --namespace $NS --create-namespace -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
+helm install gitlab gitlab/gitlab --version 9.2.2 -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
 
 # after update values.yaml, run it
-# helm upgrade gitlab gitlab/gitlab --install --namespace $NS --create-namespace -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"
+# helm upgrade gitlab gitlab/gitlab --install -f values.yaml --set global.shell.port=222 --set global.hosts.domain="$DOMAIN" --set global.hosts.gitlab.name="gitlab.$DOMAIN" --set global.hosts.pages.name="pages.$DOMAIN" --set global.hosts.ssh="gitlab.$DOMAIN"

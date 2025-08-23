@@ -6,10 +6,10 @@ set -e
 ACCESS_KEY=ead36fa2a638f64ce5c74885
 SECRET_KEY=5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
 
-export ROOT_USER=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.accesskey}" | base64 -d)
-export ROOT_PASSWORD=$(kubectl get secret --namespace $NS minio-secrets -o jsonpath="{.data.secretkey}" | base64 -d)
+export ROOT_USER=$(kubectl get secret minio-secrets -o jsonpath="{.data.accesskey}" | base64 -d)
+export ROOT_PASSWORD=$(kubectl get secret minio-secrets -o jsonpath="{.data.secretkey}" | base64 -d)
 
-kubectl run --namespace $NS minio-client \
+kubectl run minio-client \
      --rm --tty -i --restart='Never' \
      --env MINIO_SERVER_ROOT_USER=$ROOT_USER \
      --env MINIO_SERVER_ROOT_PASSWORD=$ROOT_PASSWORD \

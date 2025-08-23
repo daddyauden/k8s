@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-kubectl exec -it -n $NS deploy/gitlab-toolbox -- bash
+kubectl exec -it deploy/gitlab-toolbox -- bash
 
 # gitlab-rails console
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 set -e
 
-helm uninstall gitlab -n $NS
+helm uninstall gitlab
 
-kubectl -n $NS get secrets --no-headers -o custom-columns=":metadata.name" | grep '^gitlab-' | xargs -I {} kubectl -n $NS delete secret {}
+kubectl get secrets --no-headers -o custom-columns=":metadata.name" | grep '^gitlab-' | xargs -I {} kubectl delete secret {}
 
-kubectl get pvc -n $NS --no-headers -o custom-columns=":metadata.name" | grep '^repo-data-gitlab-' | xargs -I {} kubectl -n $NS delete pvc {}
+kubectl get pvc --no-headers -o custom-columns=":metadata.name" | grep '^repo-data-gitlab-' | xargs -I {} kubectl delete pvc {}

@@ -3,15 +3,8 @@ set -e
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: $NS
-EOF
+kubectl create secret generic redis-secrets --from-literal=redis-password=redis-admin --from-literal=REDIS_PASSWORD=redis-admin
 
-kubectl create secret generic redis-secrets --from-literal=redis-password=redis-admin --from-literal=REDIS_PASSWORD=redis-admin -n $NS
+helm install redis bitnami/redis --version 21.2.13 -f values.yaml
 
-helm install redis bitnami/redis --version 21.2.13 --namespace $NS --create-namespace -f values.yaml
-
-# helm upgrade --install redis bitnami/redis --namespace $NS --create-namespace -f values.yaml
+# helm upgrade --install redis bitnami/redis -f values.yaml

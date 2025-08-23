@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-helm uninstall postgresql -n $NS
+helm uninstall postgresql
 
-kubectl delete secret postgres-secrets -n $NS
+kubectl delete secret postgres-secrets

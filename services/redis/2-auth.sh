@@ -1,16 +1,16 @@
 #!/usr/bin/env sh
 set -e
 
-REDIS_PASSWORD=$(kubectl get secret --namespace $NS redis-secrets -o jsonpath="{.data.redis-password}" | base64 -d)
+REDIS_PASSWORD=$(kubectl get secret redis-secrets -o jsonpath="{.data.redis-password}" | base64 -d)
 
 echo $REDIS_PASSWORD
 
-kubectl run --namespace $NS redis-client --restart='Never' --env REDIS_PASSWORD=$REDIS_PASSWORD  --image docker.io/bitnami/redis:8.0.3-debian-12-r1 --command -- sleep infinity
+kubectl run redis-client --restart='Never' --env REDIS_PASSWORD=$REDIS_PASSWORD  --image docker.io/bitnami/redis:8.0.3-debian-12-r1 --command -- sleep infinity
 
-kubectl exec -it redis-client --namespace $NS -- bash
+kubectl exec -it redis-client -- bash
 
 # proxy
-# kubectl port-forward --namespace $NS svc/redis 6379:6379 &
+# kubectl port-forward svc/redis 6379:6379 &
 # REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
 
 # Auth

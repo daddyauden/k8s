@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 set -e
 
-helm uninstall redis -n $NS
+helm uninstall redis
 
-kubectl delete secret redis-secrets -n $NS
+kubectl delete secret redis-secrets
