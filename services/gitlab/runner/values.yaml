@@ -4,7 +4,7 @@ revisionHistoryLimit: 10
 
 gitlabUrl: ""
 
-runnerToken: "glrt-wQQlgUe-4yPPrDss0HHwT286MQp0OjEKdToxCw.01.120fe273w"
+runnerToken: "glrt-mWCshmnaf2KmV-kEjdmhSm86MQp0OjEKdToxCw.01.121q20lh4"
 
 unregisterRunners: true
 
@@ -19,11 +19,7 @@ serviceAccount:
   create: true
 
 metrics:
-  enabled: true
-  serviceMonitor:
-    enabled: true
-    labels:
-      release: prometheus
+  enabled: false
 
 service:
   enabled: true

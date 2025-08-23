@@ -51,7 +51,7 @@ global:
   edition: ee
 
   ## https://docs.gitlab.com/charts/charts/globals#gitlab-version
-  gitlabVersion: "18.2.2"
+  gitlabVersion: "18.3.0"
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
@@ -127,6 +127,12 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-postgresql-settings
   psql:
+    # This exists to support template handling
+    knownDecompositions:
+      - main
+      - ci
+      - embedding
+      - sec
     connectTimeout:
     keepalives:
     keepalivesIdle:
@@ -672,6 +678,12 @@ global:
     notificationSecret: {}
       # secret:
       # key:
+    
+    ## Container Registry database configuration
+    database: 
+      password: {}
+      # user: registry
+      # name: registry
     tls:
       enabled: false
       # secretName:
@@ -975,10 +987,6 @@ installCertmanager: true
 certmanager:
   installCRDs: true
   nameOverride: certmanager
-  # Other cert-manager configurations from upstream
-  # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
-  rbac:
-    create: true
 
 ## https://docs.gitlab.com/charts/charts/nginx/
 ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
@@ -1092,6 +1100,9 @@ haproxy:
         - name: ssh
           port: 22
           targetPort: 22
+      enablePorts:
+        # Disable QUIC (UDP based) because LoadBalancer Services do not support UDP/TCP at the same time.
+        quic: false
     extraArgs:
       - --configmap-tcp-services=$(POD_NAMESPACE)/$(POD_NAMESPACE)-haproxy-tcp
 
@@ -1321,6 +1332,19 @@ postgresql:
       - name: custom-init-scripts
         mountPath: /docker-entrypoint-preinitdb.d/init_revision.sh
         subPath: init_revision.sh
+      - name: registry-database-password
+        mountPath: /etc/gitlab/postgres/registry_database_password
+        subPath: database_password
+        readOnly: true
+    extraVolumes:
+      - name: registry-database-password
+        projected:
+          sources:
+            - secret:
+                name: '{{ include "gitlab.registry.database.password.secret" . }}'
+                items:
+                  - key: '{{ include "gitlab.registry.database.password.key" . }}'
+                    path: database_password
     podAnnotations:
       postgresql.gitlab/init-revision: "1"
   metrics:
@@ -1468,3 +1492,18 @@ gitlab-zoekt:
       secretName: '{{ include "gitlab.zoekt.indexer.internalApi.secretName" $ }}'
       secretKey: '{{ include "gitlab.zoekt.indexer.internalApi.secretKey" $ }}'
       gitlabUrl: '{{ include "gitlab.zoekt.indexer.internalApi.gitlabUrl" $ }}'
+
+## Installation & configuration of OpenBao
+openbao:
+  install: false
+  psql: {}
+  config:
+    storage:
+      postgresql:
+        # Set predefined keys to empty values to enable us merging these keys
+        # with the main DB settings.
+        connection:
+          host: ''
+          database: ''
+          username: ''
+          sslMode: ''

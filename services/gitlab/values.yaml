@@ -1,7 +1,6 @@
 global:
   time_zone: UTC
   edition: ce
-  storageClass: "rook-ceph-block"
   ingress:
     enabled: true
     apiVersion: "networking.k8s.io/v1"
@@ -24,7 +23,7 @@ global:
     gitlab:
       https: true
       name: ""
-    pages:
+    minio:
       https: true
       name: ""
     ssh: ""
@@ -32,14 +31,14 @@ global:
     bootsnap:
       enabled: false
   psql:
-    serviceName: postgresql-primary
+    host: postgresql-primary
     port: 5432
     username: gitlab
+    database: gitlabhq_production
     password:
       useSecret: true
       secret: postgres-secrets
       key: gitlab-password
-    database: gitlabhq_production
     connectTimeout: 120
     preparedStatements: true
   redis:
@@ -50,82 +49,12 @@ global:
       enabled: true
       secret: redis-secrets
       key: redis-password
-  minio:
-    enabled: false
   kas:
     enabled: false
   registry:
     enabled: false
-  appConfig:
-    object_store:
-      enabled: true
-      proxy_download: true
-      connection:
-        secret: gitlab-object-storage
-        key: connection
-    lfs:
-      enabled: true
-      proxy_download: true
-      bucket: gitlab-lfs
-    artifacts:
-      enabled: true
-      proxy_download: true
-      bucket: gitlab-artifacts
-    uploads:
-      enabled: true
-      proxy_download: true
-      bucket: gitlab-uploads
-    packages:
-      enabled: true
-      proxy_download: true
-      bucket: gitlab-packages
-    externalDiffs:
-      enabled: true
-      proxy_download: true
-      bucket: gitlab-mr-diffs
-    terraformState:
-      enabled: true
-      bucket: gitlab-terraform-state
-    ciSecureFiles:
-      enabled: true
-      bucket: gitlab-ci-secure-files
-    dependencyProxy:
-      enabled: true
-      bucket: gitlab-dependency-proxy
-    backups:
-      bucket: gitlab-backups
-    microsoft_graph_mailer:
-      enabled: false
-    incomingEmail:
-      enabled: false
-    serviceDeskEmail:
-      enabled: false
-    cron_jobs: {}
-    sentry:
-      enabled: false
-    gitlab_docs:
-      enabled: false
-    smartcard:
-      enabled: false
-    sidekiq:
-      routingRules: []
-  pages:
-    enabled: true
-    accessControl: false
-    localStore:
-      enabled: false
-    objectStore:
-      bucket: gitlab-pages
-      enabled: true
-      proxy_download: true
-      connection:
-        secret: gitlab-object-storage
-        key: connection
   webservice:
-    workerTimeout: 120
-    extraEnv:
-      GITLAB_RAILS_RACK_TIMEOUT: "60"
-      GITLAB_RAILS_WAIT_TIMEOUT: "90"
+    workerTimeout: 240
   shell:
     port: 222
     tcp:
@@ -133,23 +62,6 @@ global:
 
 gitlab:
   webservice:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 1
-    maxUnavailable: 0
-    workerProcesses: 2
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        additionalLabels:
-          release: prometheus
-    psql:
-      password:
-        secret: postgres-secrets
-        key: gitlab-password
-    redis:
-      serviceName: redis-master
     resources:
       requests:
         cpu: 500m
@@ -157,15 +69,7 @@ gitlab:
       limits:
         cpu: 1
         memory: 2Gi
-    trusted_proxies:
-      - 10.20.1.1/32
     workhorse:
-      metrics:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-          additionalLabels:
-            release: prometheus
       resources:
         requests:
           cpu: 500m
@@ -174,18 +78,6 @@ gitlab:
           cpu: 1
           memory: 1Gi
   sidekiq:
-    enabled: true
-    minReplicas: 1
-    maxReplicas: 2
-    maxUnavailable: 1
-    metrics:
-      enabled: false
-    psql:
-      password:
-        secret: postgres-secrets
-        key: gitlab-password
-    redis:
-      serviceName: redis-master
     resources:
       requests:
         cpu: 500m
@@ -207,52 +99,10 @@ gitlab:
       failureThreshold: 10
   gitlab-shell:
     minReplicas: 1
-    maxReplicas: 1
+    maxReplicas: 2
     service:
       type: NodePort
       nodePort: 30022
-  toolbox:
-    enabled: true
-    replicas: 1
-    migrations:
-      enabled: false
-    webservice:
-      enabled: true
-    gitlab-shell:
-      enabled: true
-    gitlab-pages:
-      enabled: true
-    backups:
-      cron:
-        enabled: false
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 350m
-        memory: 350Mi
-  gitaly:
-    metrics:
-      enabled: false
-    persistence:
-      storageClass: rook-ceph-block
-      size: 50Gi
-  gitlab-pages:
-    rateLimitSubnetsAllowList:
-      - "10.10.0.0/16"
-      - "10.20.0.0/16"
-      - "10.30.0.0/16"
-      - "20.20.0.0/16"
-      - "30.30.0.0/16"
-      - "192.168.1.0/24"
-  gitlab-exporter:
-    enabled: true
-    metrics:
-      enabled: true
-      serviceMonitor:
-        enabled: true
-        additionalLabels:
-          release: prometheus
 
 installCertmanager: false
 
