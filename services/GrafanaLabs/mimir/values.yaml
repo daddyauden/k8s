@@ -7,26 +7,6 @@ global:
 
 mimir:
   structuredConfig:
-    common:
-      storage:
-        backend: s3
-        s3:
-          endpoint: ""
-          region: us-east-1
-          access_key_id: ead36fa2a638f64ce5c74885
-          secret_access_key: 5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4
-          bucket_name: mimir
-          http:
-            insecure_skip_verify: true
-    blocks_storage:
-      s3:
-        bucket_name: mimir-blocks
-    alertmanager_storage:
-      s3:
-        bucket_name: mimir-alertmanager
-    ruler_storage:
-      s3:
-        bucket_name: mimir-ruler
     memberlist:
       cluster_label: "{{.Release.Name}}-{{.Release.Namespace}}"
 
@@ -34,12 +14,6 @@ alertmanager:
   persistentVolume:
     enabled: true
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 1.4Gi
-  #   requests:
-  #     cpu: 1
-  #     memory: 1Gi
   statefulSet:
     enabled: true
   zoneAwareReplication:
@@ -50,23 +24,11 @@ alertmanager:
 compactor:
   persistentVolume:
     size: 10Gi
-  # resources:
-  #   limits:
-  #     memory: 2.1Gi
-  #   requests:
-  #     cpu: 1
-  #     memory: 1.5Gi
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
 distributor:
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 5.7Gi
-  #   requests:
-  #     cpu: 2
-  #     memory: 4Gi
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
@@ -74,30 +36,7 @@ ingester:
   persistentVolume:
     size: 10Gi
   replicas: 2
-  # resources:
-  #   limits:
-  #     memory: 12Gi
-  #   requests:
-  #     cpu: 3.5
-  #     memory: 8Gi
   topologySpreadConstraints: {}
-  # affinity:
-  #   podAntiAffinity:
-  #     requiredDuringSchedulingIgnoredDuringExecution:
-  #       - labelSelector:
-  #           matchExpressions:
-  #             - key: target # support for enterprise.legacyLabels
-  #               operator: In
-  #               values:
-  #                 - ingester
-  #         topologyKey: 'kubernetes.io/hostname'
-  #       - labelSelector:
-  #           matchExpressions:
-  #             - key: app.kubernetes.io/component
-  #               operator: In
-  #               values:
-  #                 - ingester
-  #         topologyKey: 'kubernetes.io/hostname'
   zoneAwareReplication:
     enabled: false
   statefulSet:
@@ -108,54 +47,38 @@ ingester:
 admin-cache:
   enabled: true
   replicas: 1
+  allocatedMemory: 64
 
 chunks-cache:
   enabled: true
   replicas: 1
+  allocatedMemory: 2048
 
 index-cache:
   enabled: true
   replicas: 1
+  allocatedMemory: 512
 
 metadata-cache:
   enabled: true
   replicas: 1
+  allocatedMemory: 128
 
 results-cache:
   enabled: true
   replicas: 1
-
-minio:
-  enabled: false
+  allocatedMemory: 128
 
 overrides_exporter:
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 128Mi
-  #   requests:
-  #     cpu: 100m
-  #     memory: 128Mi
 
 querier:
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 5.6Gi
-  #   requests:
-  #     cpu: 2
-  #     memory: 4Gi
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
 query_frontend:
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 2.8Gi
-  #   requests:
-  #     cpu: 2
-  #     memory: 2Gi
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
 
@@ -165,12 +88,6 @@ query_scheduler:
 
 ruler:
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 2.8Gi
-  #   requests:
-  #     cpu: 1
-  #     memory: 2Gi
   remoteEvaluationDedicatedQueryPath: false
   extraArgs:
     memberlist.advertise-addr: $(POD_IP)
@@ -179,31 +96,7 @@ store_gateway:
   persistentVolume:
     size: 10Gi
   replicas: 1
-  # resources:
-  #   limits:
-  #     memory: 2.1Gi
-  #   requests:
-  #     cpu: 1
-  #     memory: 1.5Gi
   topologySpreadConstraints: {}
-  # affinity:
-  #   podAntiAffinity:
-  #     requiredDuringSchedulingIgnoredDuringExecution:
-  #       - labelSelector:
-  #           matchExpressions:
-  #             - key: target # support for enterprise.legacyLabels
-  #               operator: In
-  #               values:
-  #                 - store-gateway
-  #         topologyKey: 'kubernetes.io/hostname'
-
-  #       - labelSelector:
-  #           matchExpressions:
-  #             - key: app.kubernetes.io/component
-  #               operator: In
-  #               values:
-  #                 - store-gateway
-  #         topologyKey: 'kubernetes.io/hostname'
   zoneAwareReplication:
     enabled: false
   extraArgs:
@@ -211,12 +104,6 @@ store_gateway:
 
 nginx:
   enabled: false
-  # resources:
-  #   limits:
-  #     memory: 731Mi
-  #   requests:
-  #     cpu: 1
-  #     memory: 512Mi
 
 gateway:
   enabled: true
@@ -225,9 +112,9 @@ gateway:
   nginx:
     config:
       clientMaxBodySize: 10G
-  # resources:
-  #   limits:
-  #     memory: 731Mi
-  #   requests:
-  #     cpu: 1
-  #     memory: 512Mi
+
+minio:
+  enabled: true
+  serviceAccount:
+    create: true
+    name: mimir-minio-sa

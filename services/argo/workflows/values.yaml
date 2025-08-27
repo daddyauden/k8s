@@ -41,17 +41,3 @@ server:
     ingressClassName: "nginx"
     hosts:
       - ""
-
-artifactRepository:
-  archiveLogs: true
-  s3:
-    accessKeySecret:
-      name: "argo-workflows-minio"
-      key: accesskey
-    secretKeySecret:
-      name: "argo-workflows-minio"
-      key: secretkey
-    insecure: false
-    bucket: argo-workflows
-    endpoint: ""
-    region: us-east-1

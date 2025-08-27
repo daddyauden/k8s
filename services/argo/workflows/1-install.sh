@@ -41,11 +41,9 @@ metadata:
 type: kubernetes.io/service-account-token
 EOF
 
-kubectl create secret generic argo-workflows-minio --from-literal=accesskey=ead36fa2a638f64ce5c74885 --from-literal=secretkey=5ef0ebfcb0fd30c02170fb6baba6f6fb82661836407f25751c5ccb13ae1aa0f4 -n $NS
-
 kubectl create secret generic argo-server-sso --from-literal=client-id=argo-workflows --from-literal=client-secret=c691081d35fe6a85bfadcb48de2d22f4c677e94f -n $NS
 
-helm install argo-workflows argo/argo-workflows --version 0.45.22 --namespace $NS --create-namespace -f values.yaml --set server.ingress.hosts[0]="argoworkflows.${DOMAIN}" --set artifactRepository.s3.endpoint="s3.${DOMAIN}" --set server.sso.issuer="https://argocd.${DOMAIN}/api/dex" --set server.sso.redirectUrl="https://argoworkflows.${DOMAIN}/oauth2/callback"
+helm install argo-workflows argo/argo-workflows --version 0.45.22 --namespace $NS --create-namespace -f values.yaml --set server.ingress.hosts[0]="argoworkflows.${DOMAIN}" --set server.sso.issuer="https://argocd.${DOMAIN}/api/dex" --set server.sso.redirectUrl="https://argoworkflows.${DOMAIN}/oauth2/callback"
 
 kubectl create clusterrole argo-workflows-team-devops \
   --verb="*" \
@@ -71,4 +69,4 @@ kubectl create clusterrole argo-workflows-team-devops \
 
 kubectl create clusterrolebinding argo-workflows-team-devops --clusterrole=argo-workflows-team-devops --serviceaccount=$NS:argo-workflows-team-devops
 
-# helm upgrade argo-workflows argo/argo-workflows --namespace $ARGO_NS --create-namespace -f values.yaml --set server.ingress.hosts[0]="argoworkflows.${DOMAIN}" --set artifactRepository.s3.endpoint="s3.${DOMAIN}" --set server.sso.issuer="https://argocd.${DOMAIN}/api/dex" --set server.sso.redirectUrl="https://argoworkflows.${DOMAIN}/oauth2/callback"
+# helm upgrade argo-workflows argo/argo-workflows --namespace $ARGO_NS --create-namespace -f values.yaml --set server.ingress.hosts[0]="argoworkflows.${DOMAIN}" --set server.sso.issuer="https://argocd.${DOMAIN}/api/dex" --set server.sso.redirectUrl="https://argoworkflows.${DOMAIN}/oauth2/callback"
