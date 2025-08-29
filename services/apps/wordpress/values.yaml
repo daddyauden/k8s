@@ -1,0 +1,65 @@
+global:
+  security:
+    allowInsecureImages: true
+
+image:
+  registry: ""
+  repository: library/wordpress
+  tag: latest
+  pullPolicy: Always
+  pullSecrets:
+    - regcred
+
+wordpressUsername: admin
+
+existingSecret: "wordpress-secret"
+
+wordpressEmail: test@example.com
+
+wordpressFirstName: Admin
+
+wordpressLastName: WP
+
+wordpressBlogName: "MY WP"
+
+wordpressTablePrefix: wp_
+
+wordpressScheme: https
+
+wordpressSkipInstall: false
+
+resourcesPreset: "small"
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "512Mi"
+  limits:
+    cpu: 1
+    memory: "1024Mi"
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hostname: ""
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
+
+mariadb:
+  enabled: true
+  architecture: standalone
+  auth:
+    rootPassword: "root-password"
+    database: wordpress
+    username: wordpress
+    password: "wordpress"
+  primary:
+    resourcesPreset: "small"
+
+memcached:
+  enabled: true

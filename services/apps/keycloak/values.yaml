@@ -1,0 +1,39 @@
+global:
+  defaultStorageClass: "rook-ceph-block"
+
+auth:
+  adminUser: user
+  existingSecret: keycloak-secret
+  passwordSecretKey: admin-password
+
+production: true
+
+proxyHeaders: "forwarded"
+
+logging:
+  level: DEBUG
+
+ingress:
+  enabled: true
+  hostname: ""
+  ingressClassName: "nginx"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
+
+postgresql:
+  enabled: false
+
+externalDatabase:
+  host: postgresql-primary.default
+  port: 5432
+  user: keycloak
+  database: keycloak
+  schema: public
+  existingSecret: "keycloak-secret"
+  existingSecretUserKey: "db-user"
+  existingSecretPasswordKey: "db-password"
